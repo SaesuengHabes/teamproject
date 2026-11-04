@@ -11,19 +11,11 @@
 </head>
 <body>
   <div class="layout">
-    <aside class="panel">
-      <h2 class="panel-title">ผลงานของฉัน <span class="badge">2</span></h2>
 
-      <ul class="portfolio-list">
-        <li class="portfolio-item active">
-          <span class="name">Bank (เดโม)</span>
-          <span class="count">2 รายการ</span>
-        </li>
-        <li class="portfolio-item">
-          <span class="name">Pun(เดโม)</span>
-          <span class="count">2 รายการ</span>
-        </li>
-      </ul>
+    <aside class="panel">
+      <h2 class="panel-title">ผลงานของฉัน <span class="badge" id="countBadge">0</span></h2>
+
+      <ul class="portfolio-list" id="portfolioList"></ul>
 
       <form id="portfolioForm" novalidate>
         <p class="form-title">เพิ่ม Portfolio ใหม่</p>
@@ -63,30 +55,35 @@
         <button type="submit" class="btn-submit">เพิ่ม Portfolio</button>
       </form>
     </aside>
+
+    <main class="detail" aria-live="polite">
+      <p class="empty-state" id="emptyState" hidden>ยังไม่มี Portfolio กรอกข้อมูลในฟอร์มด้านซ้ายแล้วกด "เพิ่ม Portfolio"</p>
+
+      <div id="detailContent">
+      <div class="detail-header">
+        <h1 class="detail-title" id="detailTitle"></h1>
+        <div class="detail-actions">
+          <button type="button" class="btn-outline danger" id="deleteBtn">ลบ Portfolio</button>
+        </div>
+      </div>
+
+      <section class="detail-section">
+        <h3>What I Enjoy</h3>
+        <p id="detailEnjoy"></p>
+      </section>
+      <section class="detail-section">
+        <h3>What I've Tried</h3>
+        <p id="detailTried"></p>
+      </section>
+      <section class="detail-section">
+        <h3>What I'm Curious About</h3>
+        <p id="detailCurious"></p>
+      </section>
+      </div>
+    </main>
+
   </div>
 
-  <script>
-   
-    const form = document.getElementById('portfolioForm');
-    const fields = form.querySelectorAll('.field');
-
-    function validate(field) {
-      const input = field.querySelector('input, textarea');
-      field.classList.toggle('invalid', input.value.trim() === '');
-    }
-
-    fields.forEach(field => {
-      field.querySelector('input, textarea').addEventListener('input', () => validate(field));
-    });
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      fields.forEach(validate);
-      if (!form.querySelector('.invalid')) {
-        alert('เพิ่ม Portfolio สำเร็จแล้ว');
-        form.reset();
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
