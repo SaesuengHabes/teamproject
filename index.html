@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+<<<<<<< HEAD
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -112,5 +113,94 @@
 
     </section>
 
+=======
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ผลงานของฉัน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="panel">
+      <h2 class="panel-title">ผลงานของฉัน <span class="badge">2</span></h2>
+
+      <ul class="portfolio-list">
+        <li class="portfolio-item active">
+          <span class="name">Bank (เดโม)</span>
+          <span class="count">2 รายการ</span>
+        </li>
+        <li class="portfolio-item">
+          <span class="name">Pun(เดโม)</span>
+          <span class="count">2 รายการ</span>
+        </li>
+      </ul>
+
+      <form id="portfolioForm" novalidate>
+        <p class="form-title">เพิ่ม Portfolio ใหม่</p>
+
+        <div class="field invalid">
+          <label for="displayName">ชื่อที่จะใช้แสดง <span class="req">*</span></label>
+          <div class="control">
+            <input type="text" id="displayName" placeholder="ใช้ชื่อจริงหรือนามแฝงก็ได้" required>
+          </div>
+          <div class="error-msg">โปรดระบุชื่อที่จะใช้แสดง</div>
+        </div>
+
+        <div class="field invalid">
+          <label for="enjoy">สิ่งที่ฉันชอบ (What I Enjoy) <span class="req">*</span></label>
+          <div class="control">
+            <textarea id="enjoy" required></textarea>
+          </div>
+          <div class="error-msg">โปรดระบุสิ่งที่คุณชอบทำ</div>
+        </div>
+
+        <div class="field invalid">
+          <label for="tried">สิ่งที่เคยลอง (What I've Tried) <span class="req">*</span></label>
+          <div class="control">
+            <textarea id="tried" required></textarea>
+          </div>
+          <div class="error-msg">โปรดระบุสิ่งที่คุณเคยลองทำ</div>
+        </div>
+
+        <div class="field invalid">
+          <label for="curious">สิ่งที่อยากรู้เพิ่ม (What I'm Curious About) <span class="req">*</span></label>
+          <div class="control">
+            <textarea id="curious" required></textarea>
+          </div>
+          <div class="error-msg">โปรดระบุสิ่งที่คุณสนใจหรืออยากรู้เพิ่ม</div>
+        </div>
+
+        <button type="submit" class="btn-submit">เพิ่ม Portfolio</button>
+      </form>
+    </aside>
+  </div>
+
+  <script>
+   
+    const form = document.getElementById('portfolioForm');
+    const fields = form.querySelectorAll('.field');
+
+    function validate(field) {
+      const input = field.querySelector('input, textarea');
+      field.classList.toggle('invalid', input.value.trim() === '');
+    }
+
+    fields.forEach(field => {
+      field.querySelector('input, textarea').addEventListener('input', () => validate(field));
+    });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      fields.forEach(validate);
+      if (!form.querySelector('.invalid')) {
+        alert('เพิ่ม Portfolio สำเร็จแล้ว');
+        form.reset();
+      }
+    });
+  </script>
+>>>>>>> 0deaf1bdfca6caf60f19d335d949263e2559d0a8
 </body>
 </html>
