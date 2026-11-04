@@ -1,89 +1,182 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ผลงานของฉัน</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ผลงานของฉัน</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div class="layout">
+    <div class="layout">
 
-    <aside class="panel">
-      <h2 class="panel-title">ผลงานของฉัน <span class="badge" id="countBadge">0</span></h2>
+        <!-- กล่องซ้าย: รายชื่อ + ฟอร์มสร้างใหม่ -->
+        <aside class="panel">
+            <h2 class="panel-title">ผลงานของฉัน <span class="badge" id="countBadge">0</span></h2>
 
-      <ul class="portfolio-list" id="portfolioList"></ul>
+            <ul class="portfolio-list" id="portfolioList"></ul>
 
-      <form id="portfolioForm" novalidate>
-        <p class="form-title">เพิ่ม Portfolio ใหม่</p>
+            <form id="portfolioForm" novalidate>
+                <p class="form-title">เพิ่ม Portfolio ใหม่</p>
 
-        <div class="field invalid">
-          <label for="displayName">ชื่อที่จะใช้แสดง <span class="req">*</span></label>
-          <div class="control">
-            <input type="text" id="displayName" placeholder="ใช้ชื่อจริงหรือนามแฝงก็ได้" required>
-          </div>
-          <div class="error-msg">โปรดระบุชื่อที่จะใช้แสดง</div>
+                <div class="field invalid">
+                    <label for="displayName">ชื่อที่จะใช้แสดง <span class="req">*</span></label>
+                    <div class="control">
+                        <input type="text" id="displayName" placeholder="ใช้ชื่อจริงหรือนามแฝงก็ได้" required>
+                    </div>
+                    <div class="error-msg">โปรดระบุชื่อที่จะใช้แสดง</div>
+                </div>
+
+                <div class="field invalid">
+                    <label for="enjoy">สิ่งที่ฉันชอบ (What I Enjoy) <span class="req">*</span></label>
+                    <div class="control">
+                        <textarea id="enjoy" required></textarea>
+                    </div>
+                    <div class="error-msg">โปรดระบุสิ่งที่คุณชอบทำ</div>
+                </div>
+
+                <div class="field invalid">
+                    <label for="tried">สิ่งที่เคยลอง (What I've Tried) <span class="req">*</span></label>
+                    <div class="control">
+                        <textarea id="tried" required></textarea>
+                    </div>
+                    <div class="error-msg">โปรดระบุสิ่งที่คุณเคยลองทำ</div>
+                </div>
+
+                <div class="field invalid">
+                    <label for="curious">สิ่งที่อยากรู้เพิ่ม (What I'm Curious About) <span class="req">*</span></label>
+                    <div class="control">
+                        <textarea id="curious" required></textarea>
+                    </div>
+                    <div class="error-msg">โปรดระบุสิ่งที่คุณสนใจหรืออยากรู้เพิ่ม</div>
+                </div>
+
+                <button type="submit" class="btn-submit">เพิ่ม Portfolio</button>
+            </form>
+        </aside>
+
+        <!-- คอลัมน์ขวา: รายละเอียด + ฟอร์มเพิ่ม Item -->
+        <div class="content">
+
+            <main class="detail" aria-live="polite">
+                <p class="empty-state" id="emptyState" hidden>ยังไม่มี Portfolio กรอกข้อมูลในฟอร์มด้านซ้ายแล้วกด "เพิ่ม Portfolio"</p>
+
+                <div id="detailContent">
+                    <div class="detail-header">
+                        <h1 class="detail-title" id="detailTitle"></h1>
+                        <div class="detail-actions">
+                            <button type="button" class="btn-outline danger" id="deleteBtn">ลบ Portfolio</button>
+                        </div>
+                    </div>
+
+                    <section class="detail-section">
+                        <h3>What I Enjoy</h3>
+                        <p id="detailEnjoy"></p>
+                    </section>
+                    <section class="detail-section">
+                        <h3>What I've Tried</h3>
+                        <p id="detailTried"></p>
+                    </section>
+                    <section class="detail-section">
+                        <h3>What I'm Curious About</h3>
+                        <p id="detailCurious"></p>
+                    </section>
+                </div>
+            </main>
+
+            <section class="item-section">
+                <h2>เพิ่ม Portfolio Item</h2>
+
+                <form id="item-form">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="title">Title <span>*</span></label>
+                            <input type="text" id="title" name="title" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="type">Type <span>*</span></label>
+                            <select id="type" name="type" required>
+                                <option value="">เลือกประเภท</option>
+                                <option value="Course Assignment">Course Assignment</option>
+                                <option value="Personal Project">Personal Project</option>
+                                <option value="Activity">Activity</option>
+                                <option value="Workshop">Workshop</option>
+                                <option value="Volunteer">Volunteer</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="date">Date <span>*</span></label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="role">Role <span>*</span></label>
+                            <input type="text" id="role" name="role" required>
+                        </div>
+
+                        <div class="field full-width">
+                            <label for="skills">
+                                Skills <span>*</span>
+                                <small>คั่นด้วยเครื่องหมายจุลภาค</small>
+                            </label>
+                            <input type="text" id="skills" name="skills" placeholder="HTML, CSS, JavaScript" required>
+                        </div>
+
+                        <div class="field full-width">
+                            <label for="description">Description <span>*</span></label>
+                            <textarea id="description" name="description" required></textarea>
+                        </div>
+                    </div>
+
+                    <h3>Reflection</h3>
+
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="whatIDid">What I did <span>*</span></label>
+                            <textarea id="whatIDid" name="whatIDid" required></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label for="whatILearned">What I learned <span>*</span></label>
+                            <textarea id="whatILearned" name="whatILearned" required></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label for="challenge">Challenge <span>*</span></label>
+                            <textarea id="challenge" name="challenge" required></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label for="nextStep">Next step <span>*</span></label>
+                            <textarea id="nextStep" name="nextStep" required></textarea>
+                        </div>
+
+                        <div class="field full-width">
+                            <label for="evidence">
+                                Evidence <span>*</span>
+                                <small>ลิงก์ละ 1 บรรทัด อย่างน้อย 1 ลิงก์ (ขึ้นต้นด้วย http:// หรือ https://)</small>
+                            </label>
+                            <textarea id="evidence" name="evidence" placeholder="https://example.com/my-work" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit">บันทึก Item</button>
+                        <button type="reset" class="reset-button">ล้างฟอร์ม</button>
+                    </div>
+                </form>
+            </section>
+
         </div>
+    </div>
 
-        <div class="field invalid">
-          <label for="enjoy">สิ่งที่ฉันชอบ (What I Enjoy) <span class="req">*</span></label>
-          <div class="control">
-            <textarea id="enjoy" required></textarea>
-          </div>
-          <div class="error-msg">โปรดระบุสิ่งที่คุณชอบทำ</div>
-        </div>
-
-        <div class="field invalid">
-          <label for="tried">สิ่งที่เคยลอง (What I've Tried) <span class="req">*</span></label>
-          <div class="control">
-            <textarea id="tried" required></textarea>
-          </div>
-          <div class="error-msg">โปรดระบุสิ่งที่คุณเคยลองทำ</div>
-        </div>
-
-        <div class="field invalid">
-          <label for="curious">สิ่งที่อยากรู้เพิ่ม (What I'm Curious About) <span class="req">*</span></label>
-          <div class="control">
-            <textarea id="curious" required></textarea>
-          </div>
-          <div class="error-msg">โปรดระบุสิ่งที่คุณสนใจหรืออยากรู้เพิ่ม</div>
-        </div>
-
-        <button type="submit" class="btn-submit">เพิ่ม Portfolio</button>
-      </form>
-    </aside>
-
-    <main class="detail" aria-live="polite">
-      <p class="empty-state" id="emptyState" hidden>ยังไม่มี Portfolio กรอกข้อมูลในฟอร์มด้านซ้ายแล้วกด "เพิ่ม Portfolio"</p>
-
-      <div id="detailContent">
-      <div class="detail-header">
-        <h1 class="detail-title" id="detailTitle"></h1>
-        <div class="detail-actions">
-          <button type="button" class="btn-outline danger" id="deleteBtn">ลบ Portfolio</button>
-        </div>
-      </div>
-
-      <section class="detail-section">
-        <h3>What I Enjoy</h3>
-        <p id="detailEnjoy"></p>
-      </section>
-      <section class="detail-section">
-        <h3>What I've Tried</h3>
-        <p id="detailTried"></p>
-      </section>
-      <section class="detail-section">
-        <h3>What I'm Curious About</h3>
-        <p id="detailCurious"></p>
-      </section>
-      </div>
-    </main>
-
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

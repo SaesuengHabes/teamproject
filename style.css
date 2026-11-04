@@ -10,9 +10,15 @@
   --badge: #134e4a;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body { margin: 0; min-height: 100%; }
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
 
 body {
   font-family: "Noto Sans Thai", "Segoe UI", system-ui, sans-serif;
@@ -22,6 +28,11 @@ body {
   line-height: 1.5;
 }
 
+[hidden] {
+  display: none !important;
+}
+
+/* ===== โครงหน้า: ซ้าย = รายชื่อ+ฟอร์ม, ขวา = รายละเอียด+ฟอร์ม Item ===== */
 .layout {
   display: grid;
   grid-template-columns: minmax(300px, 440px) minmax(0, 1fr);
@@ -31,6 +42,14 @@ body {
   padding: 24px;
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+/* ===== กล่องซ้าย ===== */
 .panel {
   width: 100%;
   background: var(--card-bg);
@@ -47,6 +66,7 @@ body {
   font-size: 17px;
   font-weight: 700;
 }
+
 .badge {
   background: var(--badge);
   color: #fff;
@@ -57,12 +77,17 @@ body {
   border-radius: 6px;
 }
 
+/* ===== รายชื่อ Portfolio ===== */
 .portfolio-list {
   list-style: none;
   margin: 0 0 22px;
   padding: 0;
 }
-.portfolio-list li + li { border-top: 1px solid var(--border); }
+
+.portfolio-list li + li {
+  border-top: 1px solid var(--border);
+}
+
 .portfolio-item {
   display: block;
   width: 100%;
@@ -75,41 +100,59 @@ body {
   border-left: 4px solid transparent;
   cursor: pointer;
 }
-.portfolio-item:hover { background: #f3f8f7; }
-.portfolio-item:focus-visible { outline: 3px solid rgba(15, 118, 110, .4); outline-offset: -3px; }
+
+.portfolio-item:hover {
+  background: #f3f8f7;
+}
+
+.portfolio-item:focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.4);
+  outline-offset: -3px;
+}
+
 .portfolio-item.active,
 .portfolio-item.active:hover {
   background: var(--accent-soft);
   border-left-color: var(--accent);
 }
+
 .portfolio-item .name {
   display: block;
   font-weight: 700;
   font-size: 17px;
   line-height: 1.4;
 }
+
 .portfolio-item .count {
   display: block;
   font-size: 14px;
   color: var(--muted);
 }
 
+/* ===== ฟอร์มสร้าง Portfolio ===== */
 .form-title {
   margin: 0 0 6px;
   font-size: 16px;
   font-weight: 400;
 }
 
-.field { margin-bottom: 14px; }
+.field {
+  margin-bottom: 14px;
+}
 
 .field label {
   display: block;
   margin-bottom: 8px;
   font-size: 16px;
 }
-.field label .req { color: var(--accent); }
 
-.control { position: relative; }
+.field label .req {
+  color: var(--accent);
+}
+
+.control {
+  position: relative;
+}
 
 .control input,
 .control textarea {
@@ -122,19 +165,23 @@ body {
   border-radius: 6px;
   padding: 9px 40px 9px 14px;
   outline: none;
-  transition: border-color .15s, box-shadow .15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
+
 .control textarea {
   display: block;
   min-height: 70px;
   resize: vertical;
 }
-.control input::placeholder { color: var(--muted); }
+
+.control input::placeholder {
+  color: var(--muted);
+}
 
 .control input:focus,
 .control textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, .2);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
 }
 
 .error-msg {
@@ -145,8 +192,14 @@ body {
 }
 
 .field.invalid .control input,
-.field.invalid .control textarea { border-color: var(--danger); }
-.field.invalid .error-msg { display: block; }
+.field.invalid .control textarea {
+  border-color: var(--danger);
+}
+
+.field.invalid .error-msg {
+  display: block;
+}
+
 .field.invalid .control::after {
   content: "!";
   position: absolute;
@@ -176,11 +229,19 @@ body {
   border: 0;
   border-radius: 6px;
   cursor: pointer;
-  transition: background .15s;
+  transition: background 0.15s;
 }
-.btn-submit:hover { background: #115e59; }
-.btn-submit:focus-visible { outline: 3px solid rgba(15, 118, 110, .4); outline-offset: 2px; }
 
+.btn-submit:hover {
+  background: #115e59;
+}
+
+.btn-submit:focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.4);
+  outline-offset: 2px;
+}
+
+/* ===== กล่องรายละเอียดด้านขวา ===== */
 .detail {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -195,6 +256,7 @@ body {
   gap: 16px;
   margin-bottom: 14px;
 }
+
 .detail-title {
   margin: 0;
   font-size: 32px;
@@ -202,6 +264,7 @@ body {
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
+
 .detail-actions {
   display: flex;
   gap: 8px;
@@ -217,21 +280,35 @@ body {
   border: 1px solid var(--muted);
   border-radius: 6px;
   cursor: pointer;
-  transition: background .15s;
+  transition: background 0.15s;
 }
-.btn-outline:hover { background: #f3f8f7; }
-.btn-outline.danger { color: var(--danger); border-color: var(--danger); }
-.btn-outline.danger:hover { background: #fdf2f8; }
 
-.detail-section { margin-top: 14px; }
+.btn-outline:hover {
+  background: #f3f8f7;
+}
+
+.btn-outline.danger {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.btn-outline.danger:hover {
+  background: #fdf2f8;
+}
+
+.detail-section {
+  margin-top: 14px;
+}
+
 .detail-section h3 {
   margin: 0;
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: .04em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--muted);
 }
+
 .detail-section p {
   margin: 2px 0 0;
   overflow-wrap: anywhere;
@@ -243,10 +320,145 @@ body {
   color: var(--muted);
 }
 
-@media (max-width: 860px) {
-  .layout { grid-template-columns: 1fr; padding: 12px; }
-  .detail-header { flex-direction: column; }
-  .detail-title { font-size: 26px; }
+/* ===== ฟอร์มเพิ่ม Portfolio Item ===== */
+.item-section {
+  min-width: 0;
+  padding: 22px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
 }
 
-[hidden] { display: none !important; }
+.item-section h2 {
+  margin: 0 0 20px;
+  font-size: 22px;
+}
+
+.item-section h3 {
+  margin: 24px 0 14px;
+  font-size: 18px;
+}
+
+.item-section .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.item-section .field {
+  margin-bottom: 0;
+}
+
+.item-section .field.full-width {
+  grid-column: 1 / -1;
+}
+
+.item-section .field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.item-section .field label span {
+  color: var(--danger);
+}
+
+.item-section .field label small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.item-section input,
+.item-section select,
+.item-section textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+}
+
+.item-section textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.item-section input:focus,
+.item-section select:focus,
+.item-section textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+}
+
+.item-section .form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.item-section .form-actions button {
+  padding: 10px 18px;
+  font: inherit;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.item-section .form-actions button[type="submit"] {
+  color: #fff;
+  background: var(--accent);
+}
+
+.item-section .form-actions button[type="submit"]:hover {
+  background: #115e59;
+}
+
+.item-section .form-actions .reset-button {
+  color: var(--accent);
+  background: transparent;
+  text-decoration: underline;
+}
+
+/* ===== จอเล็ก ===== */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .detail-header {
+    flex-direction: column;
+  }
+
+  .detail-title {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 560px) {
+  .item-section {
+    padding: 16px;
+  }
+
+  .item-section .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .item-section .field.full-width {
+    grid-column: auto;
+  }
+
+  .item-section .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
