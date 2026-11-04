@@ -1,0 +1,152 @@
+/* Portfolio Item Form */
+.item-section {
+    background: #ffffff;
+    padding: 28px;
+    border: 1px solid #dce2ea;
+    border-radius: 8px;
+    max-width: 100%;
+    margin: 0 auto;
+    color: #172b4d;
+}
+
+.item-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 26px;
+    color: #172b4d;
+}
+
+.item-section h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 32px 0 26px;
+    color: #172b4d;
+}
+
+/* Layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 24px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.field label {
+    font-size: 22px;
+    color: #172b4d;
+    font-weight: 400;
+}
+
+.field label::after {
+    content: "";
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #d6dfe8;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #172b4d;
+    font-family: inherit;
+    font-size: 20px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.field input,
+.field select {
+    height: 56px;
+}
+
+.field textarea {
+    min-height: 92px;
+    resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    border-color: #80b5ff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+/* Full width fields */
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Reflection */
+.item-section .form-grid + h3 {
+    margin-top: 32px;
+}
+
+/* Buttons */
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.form-actions button {
+    background: #ea580c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.form-actions button:hover {
+    background: #c2410c;
+}
+
+.form-actions .reset-button {
+    background: transparent;
+    color: #2563eb;
+    padding: 0;
+    text-decoration: underline;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .item-section {
+        padding: 18px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .field label {
+        font-size: 16px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+        font-size: 16px;
+    }
+
+    .item-section h2 {
+        font-size: 20px;
+    }
+
+    .item-section h3 {
+        font-size: 18px;
+    }
+}

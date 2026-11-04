@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>เพิ่ม Portfolio Item</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- JavaScript -->
+    <script src="js/script.js" defer></script>
+</head>
+
+<body>
+
+    <section class="item-section">
+
+        <h2>เพิ่ม Portfolio Item</h2>
+
+        <form id="item-form">
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label for="title">Title <span>*</span></label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+
+                <div class="field">
+                    <label for="type">Type <span>*</span></label>
+                    <select id="type" name="type" required>
+                        <option value="">เลือกประเภท</option>
+                        <option value="Course Assignment">Course Assignment</option>
+                        <option value="Personal Project">Personal Project</option>
+                        <option value="Activity">Activity</option>
+                        <option value="Personal Project">Workshop</option>
+                        <option value="Personal Project">Volunteer</option>
+                        <option value="Personal Project">Other</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="date">Date <span>*</span></label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+
+                <div class="field">
+                    <label for="role">Role <span>*</span></label>
+                    <input type="text" id="role" name="role" required>
+                </div>
+
+                <div class="field full-width">
+                    <label for="skills">
+                        Skills <span>*</span>
+                        <small>คั่นด้วยเครื่องหมายจุลภาค</small>
+                    </label>
+                    <input type="text" id="skills" name="skills"
+                           placeholder="HTML, CSS, JavaScript" required>
+                </div>
+
+                <div class="field full-width">
+                    <label for="description">Description <span>*</span></label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+
+            </div>
+
+            <h3>Reflection</h3>
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label for="whatIDid">What I did <span>*</span></label>
+                    <textarea id="whatIDid" name="whatIDid" required></textarea>
+                </div>
+
+                <div class="field">
+                    <label for="whatILearned">What I learned <span>*</span></label>
+                    <textarea id="whatILearned" name="whatILearned" required></textarea>
+                </div>
+
+                <div class="field">
+                    <label for="challenge">Challenge <span>*</span></label>
+                    <textarea id="challenge" name="challenge" required></textarea>
+                </div>
+
+                <div class="field">
+                    <label for="nextStep">Next step <span>*</span></label>
+                    <textarea id="nextStep" name="nextStep" required></textarea>
+                </div>
+
+                <div class="field full-width">
+                    <label for="evidence">
+                        Evidence <span>*</span>
+                        <small>ลิงก์ละ 1 บรรทัด อย่างน้อย 1 ลิงก์ (ขึ้นต้นด้วย http:// หรือ https://)</small>
+                    </label>
+                    <textarea id="evidence" name="evidence"
+                              placeholder="https://example.com/my-work"
+                              required></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit">บันทึก Item</button>
+                <button type="reset" class="reset-button">ล้างฟอร์ม</button>
+            </div>
+
+        </form>
+
+    </section>
+
+</body>
+</html>
