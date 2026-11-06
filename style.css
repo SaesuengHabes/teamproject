@@ -1,13 +1,13 @@
 :root {
-  --bg: #eaf3f2;
-  --card-bg: #ffffff;
-  --border: #d6e4e2;
-  --text: #12302d;
-  --muted: #5f7774;
-  --accent: #0f766e;
-  --accent-soft: #e0f4f1;
+  --bg: #f0f0ed;
+  --card-bg: #f7f8fa;
+  --border: #b1bbc8;
+  --text: #2a4d88;
+  --muted: #526b91;
+  --accent: #2a4d88;
+  --accent-soft: #dce4ef;
   --danger: #be185d;
-  --badge: #134e4a;
+  --badge: #3f4349;
 }
 
 * {
@@ -63,6 +63,7 @@ body {
   margin: 0 0 14px;
   font-size: 17px;
   font-weight: 700;
+  color: #3f4349;
 }
 
 .badge {
@@ -99,11 +100,11 @@ body {
 }
 
 .portfolio-item:hover {
-  background: #f3f8f7;
+  background: #e8ebef;
 }
 
 .portfolio-item:focus-visible {
-  outline: 3px solid rgba(15, 118, 110, 0.4);
+  outline: 3px solid rgba(42, 77, 136, 0.4);
   outline-offset: -3px;
 }
 
@@ -140,7 +141,7 @@ body {
   display: block;
   margin-bottom: 8px;
   font-size: 16px;
-}
+} 
 
 .field label .req {
   color: var(--accent);
@@ -177,7 +178,7 @@ body {
 .control input:focus,
 .control textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+  box-shadow: 0 0 0 3px rgba(42, 77, 136, 0.2);
 }
 
 .error-msg {
@@ -229,16 +230,16 @@ body {
 }
 
 .btn-submit:hover {
-  background: #115e59;
+  background: #203d6d;
 }
 
 .btn-submit:focus-visible {
-  outline: 3px solid rgba(15, 118, 110, 0.4);
+  outline: 3px solid rgba(42, 77, 136, 0.4);
   outline-offset: 2px;
 }
 
   .detail {
-  background: var(--card-bg);
+  background: #fff;
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 22px 24px 26px;
@@ -279,7 +280,7 @@ body {
 }
 
 .btn-outline:hover {
-  background: #f3f8f7;
+  background: #e8ebef;
 }
 
 .btn-outline.danger {
@@ -301,7 +302,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: #3f4349;
 }
 
 .detail-section p {
@@ -390,7 +391,7 @@ body {
 .item-section select:focus,
 .item-section textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+  box-shadow: 0 0 0 3px rgba(42, 77, 136, 0.2);
 }
 
 .item-section .form-actions {
@@ -414,7 +415,7 @@ body {
 }
 
 .item-section .form-actions button[type="submit"]:hover {
-  background: #115e59;
+  background: #203d6d;
 }
 
 .item-section .form-actions .reset-button {
@@ -426,13 +427,14 @@ body {
 .items-section {
   padding: 24px;
   background: #fff;
-  border: 1px solid #d9e2ec;
+  border: 1px solid var(--border);
   border-radius: 12px;
 }
 
 .items-section h2 {
   margin: 0 0 24px;
   font-size: 24px;
+  color: #3f4349;
 }
 
 #itemsContainer {
@@ -445,27 +447,27 @@ body {
   min-width: 0;
   padding: 24px;
   background: #fff;
-  border: 1px solid #d9e2ec;
+  border: 1px solid var(--border);
   border-radius: 12px;
 }
 
 .portfolio-item-card .item-title {
   margin: 0 0 4px;
-  color: #172b4d;
+  color: var(--text);
   font-size: 24px;
   font-weight: 500;
 }
 
 .portfolio-item-card p {
   margin: 0 0 12px;
-  color: #172b4d;
+  color: var(--text);
   font-size: 18px;
   overflow-wrap: anywhere;
 }
 
 .portfolio-item-card .item-meta {
   margin-bottom: 16px;
-  color: #64748b;
+  color: var(--muted);
   font-size: 16px;
 }
 
@@ -479,13 +481,13 @@ body {
 .item-skills span {
   padding: 4px 14px;
   border-radius: 20px;
-  background: #eef2f7;
+  background: #e5e9ef;
   font-size: 14px;
 }
 
 .item-reflection h4 {
   margin: 16px 0 4px;
-  color: #64748b;
+  color: var(--muted);
   font-size: 16px;
 }
 
