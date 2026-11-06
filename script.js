@@ -24,6 +24,28 @@ const deleteBtn = document.getElementById("deleteBtn");
 const portfolioForm = document.getElementById("portfolioForm");
 const portfolioFields = portfolioForm.querySelectorAll(".field");
 const itemForm = document.getElementById("item-form");
+const typeSelect = document.getElementById("type");
+const otherTypeField = document.getElementById("otherTypeField");
+const otherTypeInput = document.getElementById("otherType");
+const dateInput = document.getElementById("date");
+
+function getTodayDate() {
+  const now = new Date();
+  const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+  return localDate.toISOString().slice(0, 10);
+}
+
+dateInput.max = getTodayDate();
+
+function updateOtherTypeField() {
+  const isOther = typeSelect.value === "Other";
+  otherTypeField.hidden = !isOther;
+  otherTypeInput.required = isOther;
+  if (!isOther) otherTypeInput.value = "";
+}
+
+typeSelect.addEventListener("change", updateOtherTypeField);
+itemForm.addEventListener("reset", () => setTimeout(updateOtherTypeField));
 
 
 // 3) บันทึก / โหลดข้อมูล (localStorage)
@@ -143,7 +165,7 @@ function renderItems(portfolio) {
         <article class="portfolio-item-card">
           <h3 class="item-title">${escapeHtml(item.title)}</h3>
           <p class="item-meta">
-            ${escapeHtml(item.type)} · ${escapeHtml(item.date)} · ${escapeHtml(item.role)}
+            ${escapeHtml(item.type === "Other" && item.typeDetails ? `Other: ${item.typeDetails}` : item.type)} · ${escapeHtml(item.date)} · ${escapeHtml(item.role)}
           </p>
           <p class="item-description">${escapeHtml(item.description)}</p>
 
@@ -263,7 +285,14 @@ itemForm.addEventListener("submit", event => {
     return;
   }
 
- 
+  if (dateInput.value > getTodayDate()) {
+    alert("เลือกวันที่ไม่ถูกต้อง: วันที่ทำงานต้องไม่เป็นวันในอนาคต");
+    dateInput.focus();
+    return;
+  }
+
+  // แยก Evidence ทีละบรรทัด
+
   const evidence = document.getElementById("evidence").value
     .split("\n")
     .map(line => line.trim())
@@ -285,6 +314,7 @@ itemForm.addEventListener("submit", event => {
   const newItem = {
     title: document.getElementById("title").value.trim(),
     type: document.getElementById("type").value,
+    typeDetails: typeSelect.value === "Other" ? otherTypeInput.value.trim() : "",
     date: document.getElementById("date").value,
     role: document.getElementById("role").value.trim(),
     description: document.getElementById("description").value.trim(),
@@ -323,3 +353,4 @@ itemsContainer.addEventListener("click", event => {
 
 loadData();
 renderAll();
+ 
