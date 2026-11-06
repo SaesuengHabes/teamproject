@@ -72,22 +72,53 @@ function saveData() {
   localStorage.setItem("selectedId", JSON.stringify(selectedId));
 }
 
-function loadData() {
+async function loadData() {
+  const savedPortfolios = localStorage.getItem("portfolios");
+
   try {
-    portfolios = JSON.parse(localStorage.getItem("portfolios")) || [];
-    selectedId = JSON.parse(localStorage.getItem("selectedId"));
+    if (savedPortfolios !== null) {
+      portfolios = JSON.parse(savedPortfolios) || [];
+      selectedId = JSON.parse(localStorage.getItem("selectedId"));
+    }
+
+    const hasLegacyExample = portfolios.length === 1 && portfolios[0].name === "Portfolio ตัวอย่าง";
+    if (savedPortfolios === null || hasLegacyExample) {
+      const exampleFiles = ["portfolio-example.json", "portfolio-example-2.json"];
+      const examples = await Promise.all(exampleFiles.map(async file => {
+        const response = await fetch(file);
+        if (!response.ok) throw new Error(`โหลด ${file} ไม่สำเร็จ`);
+        return response.json();
+      }));
+
+      portfolios = examples.map(example => ({
+        id: example.portfolioId,
+        name: example.name,
+        enjoy: example.whatIEnjoy,
+        tried: example.whatIveTried,
+        curious: example.whatImCuriousAbout,
+        items: (example.items || []).map(item => ({
+          ...item,
+          whatIDid: item.reflection?.whatIDid || "",
+          whatILearned: item.reflection?.whatILearned || "",
+          challenge: item.reflection?.challenge || "",
+          nextStep: item.reflection?.nextStep || ""
+        }))
+      }));
+      selectedId = portfolios.length > 0 ? portfolios[0].id : null;
+      saveData();
+    }
   } catch (error) {
-    // ถ้าข้อมูลเสีย ให้เริ่มใหม่
+    console.error("ไม่สามารถโหลดข้อมูล Portfolio ได้:", error);
     portfolios = [];
     selectedId = null;
   }
 
-  
   const found = portfolios.find(p => p.id === selectedId);
   if (!found) {
     selectedId = portfolios.length > 0 ? portfolios[0].id : null;
   }
 }
+
 
 
 
@@ -266,7 +297,7 @@ function handlePortfolioSelection(event) {
   const button = event.target.closest(".portfolio-item");
   if (!button) return;
 
-  selectedId = Number(button.dataset.id);
+  selectedId = button.dataset.id;
   saveData();
   renderAll();
   showPage("portfolioPage");
@@ -396,7 +427,5 @@ itemsContainer.addEventListener("click", event => {
 
 });
 
-
-loadData();
-renderAll();
+loadData().then(renderAll);
  
