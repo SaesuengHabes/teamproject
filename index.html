@@ -14,41 +14,57 @@
 <body>
     <div class="layout">
 
-        <!-- กล่องซ้าย: รายชื่อ + ฟอร์มสร้างใหม่ -->
+        <!-- กล่องซ้าย: รายชื่อ Portfolio และฟอร์มสร้างใหม่ -->
         <aside class="panel">
-            <h2 class="panel-title">ผลงานของฉัน <span class="badge" id="countBadge">0</span></h2>
+            <h2 class="panel-title">
+                ผลงานของฉัน
+                <span class="badge" id="countBadge">0</span>
+            </h2>
 
             <ul class="portfolio-list" id="portfolioList"></ul>
 
             <form id="portfolioForm" novalidate>
                 <p class="form-title">เพิ่ม Portfolio ใหม่</p>
 
-                <div class="field invalid">
-                    <label for="displayName">ชื่อที่จะใช้แสดง <span class="req">*</span></label>
+                <div class="field">
+                    <label for="displayName">
+                        ชื่อที่จะใช้แสดง <span class="req">*</span>
+                    </label>
                     <div class="control">
-                        <input type="text" id="displayName" placeholder="ใช้ชื่อจริงหรือนามแฝงก็ได้" required>
+                        <input
+                            type="text"
+                            id="displayName"
+                            placeholder="ใช้ชื่อจริงหรือนามแฝงก็ได้"
+                            required
+                        >
                     </div>
                     <div class="error-msg">โปรดระบุชื่อที่จะใช้แสดง</div>
                 </div>
 
-                <div class="field invalid">
-                    <label for="enjoy">สิ่งที่ฉันชอบ (What I Enjoy) <span class="req">*</span></label>
+                <div class="field">
+                    <label for="enjoy">
+                        สิ่งที่ฉันชอบ (What I Enjoy) <span class="req">*</span>
+                    </label>
                     <div class="control">
                         <textarea id="enjoy" required></textarea>
                     </div>
                     <div class="error-msg">โปรดระบุสิ่งที่คุณชอบทำ</div>
                 </div>
 
-                <div class="field invalid">
-                    <label for="tried">สิ่งที่เคยลอง (What I've Tried) <span class="req">*</span></label>
+                <div class="field">
+                    <label for="tried">
+                        สิ่งที่เคยลอง (What I've Tried) <span class="req">*</span>
+                    </label>
                     <div class="control">
                         <textarea id="tried" required></textarea>
                     </div>
                     <div class="error-msg">โปรดระบุสิ่งที่คุณเคยลองทำ</div>
                 </div>
 
-                <div class="field invalid">
-                    <label for="curious">สิ่งที่อยากรู้เพิ่ม (What I'm Curious About) <span class="req">*</span></label>
+                <div class="field">
+                    <label for="curious">
+                        สิ่งที่อยากรู้เพิ่ม (What I'm Curious About) <span class="req">*</span>
+                    </label>
                     <div class="control">
                         <textarea id="curious" required></textarea>
                     </div>
@@ -59,17 +75,27 @@
             </form>
         </aside>
 
-        <!-- คอลัมน์ขวา: รายละเอียด + ฟอร์มเพิ่ม Item -->
+        <!-- คอลัมน์ขวา -->
         <div class="content">
 
+            <!-- รายละเอียด Portfolio ที่เลือก -->
             <main class="detail" aria-live="polite">
-                <p class="empty-state" id="emptyState" hidden>ยังไม่มี Portfolio กรอกข้อมูลในฟอร์มด้านซ้ายแล้วกด "เพิ่ม Portfolio"</p>
+                <p class="empty-state" id="emptyState" hidden>
+                    ยังไม่มี Portfolio กรอกข้อมูลในฟอร์มด้านซ้ายแล้วกด "เพิ่ม Portfolio"
+                </p>
 
-                <div id="detailContent">
+                <div id="detailContent" hidden>
                     <div class="detail-header">
                         <h1 class="detail-title" id="detailTitle"></h1>
+
                         <div class="detail-actions">
-                            <button type="button" class="btn-outline danger" id="deleteBtn">ลบ Portfolio</button>
+                            <button
+                                type="button"
+                                class="btn-outline danger"
+                                id="deleteBtn"
+                            >
+                                ลบ Portfolio
+                            </button>
                         </div>
                     </div>
 
@@ -77,10 +103,12 @@
                         <h3>What I Enjoy</h3>
                         <p id="detailEnjoy"></p>
                     </section>
+
                     <section class="detail-section">
                         <h3>What I've Tried</h3>
                         <p id="detailTried"></p>
                     </section>
+
                     <section class="detail-section">
                         <h3>What I'm Curious About</h3>
                         <p id="detailCurious"></p>
@@ -88,6 +116,17 @@
                 </div>
             </main>
 
+            <!-- รายการ Portfolio Items ที่ JavaScript สร้าง -->
+            <section class="items-section">
+                <h2>
+                    Portfolio Items
+                    <span class="badge" id="itemCount">0</span>
+                </h2>
+
+                <div class="items-container" id="itemsContainer"></div>
+            </section>
+
+            <!-- ฟอร์มเพิ่ม Portfolio Item -->
             <section class="item-section">
                 <h2>เพิ่ม Portfolio Item</h2>
 
@@ -126,7 +165,13 @@
                                 Skills <span>*</span>
                                 <small>คั่นด้วยเครื่องหมายจุลภาค</small>
                             </label>
-                            <input type="text" id="skills" name="skills" placeholder="HTML, CSS, JavaScript" required>
+                            <input
+                                type="text"
+                                id="skills"
+                                name="skills"
+                                placeholder="HTML, CSS, JavaScript"
+                                required
+                            >
                         </div>
 
                         <div class="field full-width">
@@ -161,9 +206,17 @@
                         <div class="field full-width">
                             <label for="evidence">
                                 Evidence <span>*</span>
-                                <small>ลิงก์ละ 1 บรรทัด อย่างน้อย 1 ลิงก์ (ขึ้นต้นด้วย http:// หรือ https://)</small>
+                                <small>
+                                    ลิงก์ละ 1 บรรทัด อย่างน้อย 1 ลิงก์
+                                    (ขึ้นต้นด้วย http:// หรือ https://)
+                                </small>
                             </label>
-                            <textarea id="evidence" name="evidence" placeholder="https://example.com/my-work" required></textarea>
+                            <textarea
+                                id="evidence"
+                                name="evidence"
+                                placeholder="https://example.com/my-work"
+                                required
+                            ></textarea>
                         </div>
                     </div>
 
