@@ -75,6 +75,7 @@ function getSelectedPortfolio() {
 
 // รายชื่อ Portfolio ด้านซ้าย
 function renderList() {
+
   countBadge.textContent = portfolios.length;
 
   listEl.innerHTML = portfolios
@@ -89,10 +90,12 @@ function renderList() {
       </li>
     `)
     .join("");
+
 }
 
 // รายละเอียด Portfolio ที่เลือก (ด้านขวาบน)
 function renderDetail() {
+
   const portfolio = getSelectedPortfolio();
 
   // ไม่มี Portfolio -> โชว์ข้อความว่าง
@@ -318,6 +321,7 @@ itemsContainer.addEventListener("click", event => {
 
   saveData();
   renderAll();
+
 });
 
 // =====================================================
