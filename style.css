@@ -8,6 +8,19 @@
   --accent-soft: #dce4ef;
   --danger: #be185d;
   --badge: #3f4349;
+  --header-bg: #fff;
+  --surface: #fff;
+  --input-bg: #fff;
+  --input-border: #d1d5db;
+  --strong-text: #3f4349;
+  --hover-bg: #e8ebef;
+  --tag-bg: #e5e9ef;
+  --danger-bg: #fdf2f8;
+  --delete-bg: #fef2f2;
+}
+
+body[data-theme="dark"] {
+  --bg: #101a33;
 }
 
 * {
@@ -32,12 +45,98 @@ body {
   display: none !important;
 }
 
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 24px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header h1 {
+  margin: 0;
+  color: var(--strong-text);
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.page-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  width: 52px;
+  height: 30px;
+  flex: 0 0 52px;
+  padding: 3px;
+  background: #aeb5bf;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.theme-toggle:hover {
+  background: #aeb5bf;
+}
+
+body[data-theme="dark"] .theme-toggle,
+body[data-theme="dark"] .theme-toggle:hover {
+  background: var(--bg);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid rgba(42, 77, 136, 0.4);
+  outline-offset: 2px;
+}
+
+.theme-toggle-thumb {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.theme-toggle[aria-checked="true"] .theme-toggle-thumb {
+  transform: translateX(22px);
+}
+
+.page-tab {
+  padding: 9px 16px;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.page-tab:hover,
+.page-tab.active {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.page-tab:focus-visible {
+  outline: 3px solid rgba(42, 77, 136, 0.35);
+  outline-offset: 2px;
+}
+
 .layout {
   display: grid;
   grid-template-columns: minmax(300px, 440px) minmax(0, 1fr);
   gap: 24px;
   align-items: start;
-  min-height: 100vh;
+  min-height: calc(100vh - 76px);
   padding: 24px;
 }
 
@@ -63,7 +162,17 @@ body {
   margin: 0 0 14px;
   font-size: 17px;
   font-weight: 700;
-  color: #3f4349;
+  color: var(--strong-text);
+}
+
+.saved-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  color: var(--strong-text);
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .badge {
@@ -86,6 +195,11 @@ body {
   border-top: 1px solid var(--border);
 }
 
+.list-empty {
+  padding: 12px 0;
+  color: var(--muted);
+}
+
 .portfolio-item {
   display: block;
   width: 100%;
@@ -100,7 +214,7 @@ body {
 }
 
 .portfolio-item:hover {
-  background: #e8ebef;
+  background: var(--hover-bg);
 }
 
 .portfolio-item:focus-visible {
@@ -127,12 +241,6 @@ body {
   color: var(--muted);
 }
 
-.form-title {
-  margin: 0 0 6px;
-  font-size: 16px;
-  font-weight: 400;
-}
-
 .field {
   margin-bottom: 14px;
 }
@@ -157,8 +265,8 @@ body {
   font: inherit;
   font-size: 15px;
   color: var(--text);
-  background: #fff;
-  border: 1px solid #d1d5db;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 6px;
   padding: 9px 40px 9px 14px;
   outline: none;
@@ -239,7 +347,7 @@ body {
 }
 
   .detail {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 22px 24px 26px;
@@ -272,7 +380,7 @@ body {
   font-size: 14px;
   padding: 5px 10px;
   color: var(--muted);
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--muted);
   border-radius: 6px;
   cursor: pointer;
@@ -280,7 +388,7 @@ body {
 }
 
 .btn-outline:hover {
-  background: #e8ebef;
+  background: var(--hover-bg);
 }
 
 .btn-outline.danger {
@@ -289,7 +397,7 @@ body {
 }
 
 .btn-outline.danger:hover {
-  background: #fdf2f8;
+  background: var(--danger-bg);
 }
 
 .detail-section {
@@ -302,7 +410,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #3f4349;
+  color: var(--strong-text);
 }
 
 .detail-section p {
@@ -376,8 +484,8 @@ body {
   font: inherit;
   font-size: 15px;
   color: var(--text);
-  background: #fff;
-  border: 1px solid #d1d5db;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 6px;
   outline: none;
 }
@@ -426,7 +534,7 @@ body {
 
 .items-section {
   padding: 24px;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
 }
@@ -434,7 +542,7 @@ body {
 .items-section h2 {
   margin: 0 0 24px;
   font-size: 24px;
-  color: #3f4349;
+  color: var(--strong-text);
 }
 
 #itemsContainer {
@@ -446,7 +554,7 @@ body {
 .portfolio-item-card {
   min-width: 0;
   padding: 24px;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
 }
@@ -481,7 +589,7 @@ body {
 .item-skills span {
   padding: 4px 14px;
   border-radius: 20px;
-  background: #e5e9ef;
+  background: var(--tag-bg);
   font-size: 14px;
 }
 
@@ -508,7 +616,7 @@ body {
   margin-top: 16px;
   padding: 8px 14px;
   color: #dc2626;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid #dc2626;
   border-radius: 6px;
   font: inherit;
@@ -516,15 +624,14 @@ body {
 }
 
 .portfolio-item-card .delete-item-btn:hover {
-  background: #fef2f2;
+  background: var(--delete-bg);
 }
-
-
 
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: 1fr;
-    padding: 12px;
+    gap: 16px;
+    padding: 16px;
   }
 
   .detail-header {
@@ -536,23 +643,43 @@ body {
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
+  .site-header {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .theme-toggle {
+    align-self: flex-start;
+  }
+
+  .page-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .page-tab {
+    padding-inline: 8px;
+  }
+
+  .item-section .form-grid,
   #itemsContainer {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (max-width: 560px) {
-  .item-section {
+  .panel,
+  .item-section,
+  .detail,
+  .items-section,
+  .portfolio-item-card {
     padding: 16px;
   }
 
-  .item-section .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .item-section .field.full-width {
-    grid-column: auto;
+  .detail-title {
+    font-size: 23px;
   }
 
   .item-section .form-actions {

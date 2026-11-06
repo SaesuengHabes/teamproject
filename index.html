@@ -12,21 +12,30 @@
 </head>
 
 <body>
+    <header class="site-header">
+        <button type="button" class="theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-label="โหมดมืด" title="เปิดโหมดมืด">
+            <span class="theme-toggle-thumb" aria-hidden="true"></span>
+        </button>
+        <h1>MY PORTFOLIO</h1>
+        <nav class="page-nav" aria-label="หน้าหลัก">
+            <button type="button" class="page-tab active" data-page="createPage" aria-pressed="true">สร้าง Portfolio</button>
+            <button type="button" class="page-tab" data-page="portfolioPage" aria-pressed="false">PORTFOLIO</button>
+        </nav>
+    </header>
+
     <div class="layout">
 
 
-        <aside class="panel">
-            <h1 class="panel-title">
-                MY PORTFOLIO
+        <aside class="panel create-panel" id="createPage">
+            <h1 class="panel-title">เพิ่ม Portfolio ใหม่</h1>
+            <p class="saved-count">
+                PORTFOLIO ที่บันทึกแล้ว
                 <span class="badge" id="countBadge">0</span>
-            </h1>
-
-            <ul class="portfolio-list" id="portfolioList"></ul>
+                รายการ
+            </p>
+            <ul class="portfolio-list" id="createPortfolioList" aria-label="รายการ Portfolio ที่บันทึกแล้ว"></ul>
 
             <form id="portfolioForm" novalidate>
-                <h4>เพิ่ม Portfolio ใหม่</h4>
-
-
                 <div class="field">
                 
 
@@ -84,11 +93,110 @@
                     <div class="error-msg">โปรดระบุสิ่งที่คุณสนใจหรืออยากรู้เพิ่ม</div>
                 </div>
 
-                <button type="submit" class="btn-submit">เพิ่ม Portfolio หลัก</button>
+                <button type="submit" class="btn-submit">บันทึก Portfolio</button>
             </form>
         </aside>
 
-        <div class="content">
+        <div class="content create-content">
+            <section class="item-section">
+                <h4>เพิ่ม Portfolio Item ใหม่</h4>
+
+                <form id="item-form">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="title">Title <span>*</span></label>
+                            <input type="text" id="title" name="title" required placeholder="ระบุชื่อผลงาน">
+                        </div>
+
+                        <div class="field">
+                            <label for="type">Type <span>*</span></label>
+                            <select id="type" name="type" required>
+                                <option value="">เลือกประเภท</option>
+                                <option value="Course Assignment">Course Assignment</option>
+                                <option value="Personal Project">Personal Project</option>
+                                <option value="Activity">Activity</option>
+                                <option value="Workshop">Workshop</option>
+                                <option value="Volunteer">Volunteer</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="field full-width" id="otherTypeField" hidden>
+                            <label for="otherType">ระบุประเภทอื่น ๆ <span>*</span></label>
+                            <input type="text" id="otherType" name="otherType" placeholder="พิมพ์รายละเอียดประเภทผลงาน">
+                        </div>
+
+                        <div class="field">
+                            <label for="date">Date <span>*</span></label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="role">Role <span>*</span></label>
+                            <input type="text" id="role" name="role" required placeholder="ระบุหน้าที่">
+                        </div>
+
+                        <div class="field full-width">
+                            <label for="skills">Skills <span>*</span></label>
+                            <input type="text" id="skills" name="skills" placeholder="ระบุทักษะที่ใช้" required>
+                        </div>
+
+                        <div class="field full-width">
+                            <label for="description">Description <span>*</span></label>
+                            <textarea id="description" name="description" required placeholder="ระบุรายละเอียดงาน"></textarea>
+                        </div>
+                    </div>
+
+                    <h3>Reflection</h3>
+
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="whatIDid">What I did <span>*</span></label>
+                            <textarea id="whatIDid" name="whatIDid" required placeholder="ระบุสิ่งที่ทำ"></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label for="whatILearned">What I learned <span>*</span></label>
+                            <textarea id="whatILearned" name="whatILearned" required placeholder="ระบุสิ่งที่เรียนรู้"></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label for="challenge">Challenge <span>*</span></label>
+                            <textarea id="challenge" name="challenge" required placeholder="ระบุความท้าทาย"></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label for="nextStep">Next step <span>*</span></label>
+                            <textarea id="nextStep" name="nextStep" required placeholder="ระบุสิ่งที่ต้องการทำต่อในอนาคต"></textarea>
+                        </div>
+
+                        <div class="field full-width">
+                            <label for="evidence">
+                                Evidence <span>*</span>
+                                <small>ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://</small>
+                            </label>
+                            <textarea id="evidence" name="evidence" placeholder="ระบุลิงก์หลักฐาน" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit">บันทึก Portfolio Item</button>
+                        <button type="reset" class="reset-button">ล้างฟอร์ม</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <aside class="panel portfolio-panel" id="portfolioPage" hidden>
+            <h2 class="panel-title">
+                PORTFOLIO ที่บันทึกแล้ว
+                <span class="badge" id="portfolioCountBadge">0</span>
+                รายการ
+            </h2>
+            <ul class="portfolio-list" id="portfolioList"></ul>
+        </aside>
+
+        <div class="content portfolio-content" hidden>
             <main class="detail" aria-live="polite">
                 <p class="empty-state" id="emptyState" hidden>
                     ยังไม่มี Portfolio 
@@ -135,114 +243,6 @@
 
                 <div class="items-container" id="itemsContainer"></div>
             </section>
-
-
-            <section class="item-section">
-                <h4>เพิ่ม Portfolio Item ใหม่</h4>
-
-                <form id="item-form">
-                    <div class="form-grid">
-                        <div class="field">
-                            <label for="title">Title <span>*</span></label>
-                            <input type="text" id="title" name="title" required placeholder="ระบุชื่อผลงาน">
-            
-                        </div>
-
-                        <div class="field">
-                            <label for="type">Type <span>*</span></label>
-                            <select id="type" name="type" required>
-                                <option value="">เลือกประเภท</option>
-                                <option value="Course Assignment">Course Assignment</option>
-                                <option value="Personal Project">Personal Project</option>
-                                <option value="Activity">Activity</option>
-                                <option value="Workshop">Workshop</option>
-                                <option value="Volunteer">Volunteer</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-
-                        <div class="field full-width" id="otherTypeField" hidden>
-                            <label for="otherType">ระบุประเภทอื่น ๆ <span>*</span></label>
-                            <input type="text" id="otherType" name="otherType" placeholder="พิมพ์รายละเอียดประเภทผลงาน">
-                        </div>
-
-                        <div class="field">
-                            <label for="date">Date <span>*</span></label>
-                            <input type="date" id="date" name="date" required>
-                        </div>
-
-                        <div class="field">
-                            <label for="role">Role <span>*</span></label>
-                            <input type="text" id="role" name="role" required placeholder="ระบุหน้าที่">
-                        </div>
-
-                        <div class="field full-width">
-                            <label for="skills">
-                                Skills <span>*</span>
-                                
-                            </label>
-                            <input
-                                type="text"
-                                id="skills"
-                                name="skills"
-                                placeholder="ระบุทักษะที่ใช้"
-                                required
-                            >
-                        </div>
-
-                        <div class="field full-width">
-                            <label for="description">Description <span>*</span></label>
-                            <textarea id="description" name="description" required placeholder="ระบุรายละเอียดงาน"></textarea>
-                        </div>
-                    </div>
-
-                    <h3>Reflection</h3>
-
-                    <div class="form-grid">
-                        <div class="field">
-                            <label for="whatIDid">What I did <span>*</span></label>
-                            <textarea id="whatIDid" name="whatIDid" required placeholder="ระบุสิ่งที่ทำ"></textarea>
-                        </div>
-
-                        <div class="field">
-                            <label for="whatILearned">What I learned <span>*</span></label>
-                            <textarea id="whatILearned" name="whatILearned" required placeholder="ระบุสิ่งที่เรียนรู้"></textarea>
-                        </div>
-
-                        <div class="field">
-                            <label for="challenge">Challenge <span>*</span></label>
-                            <textarea id="challenge" name="challenge" required placeholder="ระบุความท้าทาย"></textarea>
-                        </div>
-
-                        <div class="field">
-                            <label for="nextStep">Next step <span>*</span></label>
-                            <textarea id="nextStep" name="nextStep" required placeholder="ระบุสิ่งที่ต้องการทำต่อในอนาคต"></textarea>
-                        </div>
-
-                        <div class="field full-width">
-                            <label for="evidence">
-                                Evidence <span>*</span>
-                                <small>
-                                
-                                    ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://
-                                </small>
-                            </label>
-                            <textarea
-                                id="evidence"
-                                name="evidence"
-                                placeholder="ระบุลิงก์หลักฐาน"
-                                required
-                            ></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit">บันทึก Portfolio Item</button>
-                        <button type="reset" class="reset-button">ล้างฟอร์ม</button>
-                    </div>
-                </form>
-            </section>
-
         </div>
     </div>
 
