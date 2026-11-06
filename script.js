@@ -1,14 +1,13 @@
 
-// 1) ตัวแปรเก็บข้อมูล
-
 let portfolios = [];   // เก็บ Portfolio ทั้งหมด
 let selectedId = null; // id ของ Portfolio ที่กำลังเลือกอยู่
 
-
-// 2) ดึง element จากหน้าเว็บมาเก็บไว้ใช้
-
-const listEl = document.getElementById("portfolioList");
+const listEls = [
+  document.getElementById("portfolioList"),
+  document.getElementById("createPortfolioList")
+];
 const countBadge = document.getElementById("countBadge");
+const portfolioCountBadge = document.getElementById("portfolioCountBadge");
 const emptyState = document.getElementById("emptyState");
 const detailContent = document.getElementById("detailContent");
 
@@ -20,6 +19,12 @@ const detailCurious = document.getElementById("detailCurious");
 const itemsContainer = document.getElementById("itemsContainer");
 const itemCount = document.getElementById("itemCount");
 const deleteBtn = document.getElementById("deleteBtn");
+const pageTabs = document.querySelectorAll(".page-tab");
+const themeToggle = document.getElementById("themeToggle");
+const createPage = document.getElementById("createPage");
+const createContent = document.querySelector(".create-content");
+const portfolioPage = document.getElementById("portfolioPage");
+const portfolioContent = document.querySelector(".portfolio-content");
 
 const portfolioForm = document.getElementById("portfolioForm");
 const portfolioFields = portfolioForm.querySelectorAll(".field");
@@ -28,6 +33,20 @@ const typeSelect = document.getElementById("type");
 const otherTypeField = document.getElementById("otherTypeField");
 const otherTypeInput = document.getElementById("otherType");
 const dateInput = document.getElementById("date");
+
+function setTheme(theme) {
+  const isDark = theme === "dark";
+  document.body.dataset.theme = isDark ? "dark" : "light";
+  themeToggle.setAttribute("aria-checked", String(isDark));
+  themeToggle.title = isDark ? "เปิดโหมดสว่าง" : "เปิดโหมดมืด";
+}
+
+setTheme(localStorage.getItem("portfolioTheme") === "dark" ? "dark" : "light");
+themeToggle.addEventListener("click", () => {
+  const nextTheme = document.body.dataset.theme === "dark" ? "light" : "dark";
+  localStorage.setItem("portfolioTheme", nextTheme);
+  setTheme(nextTheme);
+});
 
 function getTodayDate() {
   const now = new Date();
@@ -47,9 +66,6 @@ function updateOtherTypeField() {
 typeSelect.addEventListener("change", updateOtherTypeField);
 itemForm.addEventListener("reset", () => setTimeout(updateOtherTypeField));
 
-
-// 3) บันทึก / โหลดข้อมูล (localStorage)
- //แปลง JSON
 
 function saveData() {
   localStorage.setItem("portfolios", JSON.stringify(portfolios));
@@ -95,8 +111,16 @@ function getSelectedPortfolio() {
 function renderList() {
 
   countBadge.textContent = portfolios.length;
+  portfolioCountBadge.textContent = portfolios.length;
 
-  listEl.innerHTML = portfolios
+  if (portfolios.length === 0) {
+    listEls.forEach(list => {
+      list.innerHTML = '<li class="list-empty">ยังไม่มี Portfolio ที่บันทึก</li>';
+    });
+    return;
+  }
+
+  const portfolioListMarkup = portfolios
     .map(p => `
       <li>
         <button type="button"
@@ -108,6 +132,10 @@ function renderList() {
       </li>
     `)
     .join("");
+
+  listEls.forEach(list => {
+    list.innerHTML = portfolioListMarkup;
+  });
 
 }
 
@@ -202,8 +230,20 @@ function renderAll() {
   renderDetail();
 }
 
+function showPage(pageId) {
+  const isCreatePage = pageId === "createPage";
+  createPage.hidden = !isCreatePage;
+  createContent.hidden = !isCreatePage;
+  portfolioPage.hidden = isCreatePage;
+  portfolioContent.hidden = isCreatePage;
 
-// 6) ตรวจฟอร์ม Portfolio 
+  pageTabs.forEach(tab => {
+    const isActive = tab.dataset.page === pageId;
+    tab.classList.toggle("active", isActive);
+    tab.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
 
 function validateField(field) {
   const input = field.querySelector("input, textarea");
@@ -211,23 +251,29 @@ function validateField(field) {
   field.classList.toggle("invalid", isEmpty);
 }
 
-portfolioFields.forEach(field => {
-  const input = field.querySelector("input, textarea");
-  input.addEventListener("input", () => validateField(field));
+portfolioForm.addEventListener("input", event => {
+  const field = event.target.closest(".field");
+  if (field) validateField(field);
+});
+
+pageTabs.forEach(tab => {
+  tab.addEventListener("click", () => showPage(tab.dataset.page));
 });
 
 
-// 7) เหตุการณ์ต่าง ๆ (กดปุ่ม / ส่งฟอร์ม)
 
-
-
-listEl.addEventListener("click", event => {
+function handlePortfolioSelection(event) {
   const button = event.target.closest(".portfolio-item");
   if (!button) return;
 
   selectedId = Number(button.dataset.id);
   saveData();
   renderAll();
+  showPage("portfolioPage");
+}
+
+listEls.forEach(list => {
+  list.addEventListener("click", handlePortfolioSelection);
 });
 
 
