@@ -71,6 +71,7 @@ function getSelectedPortfolio() {
 
 
 function renderList() {
+
   countBadge.textContent = portfolios.length;
 
   listEl.innerHTML = portfolios
@@ -85,10 +86,12 @@ function renderList() {
       </li>
     `)
     .join("");
+
 }
 
 
 function renderDetail() {
+
   const portfolio = getSelectedPortfolio();
 
   
@@ -314,6 +317,7 @@ itemsContainer.addEventListener("click", event => {
 
   saveData();
   renderAll();
+
 });
 
 
