@@ -1,12 +1,12 @@
-// =====================================================
+
 // 1) ตัวแปรเก็บข้อมูล
-// =====================================================
+
 let portfolios = [];   // เก็บ Portfolio ทั้งหมด
 let selectedId = null; // id ของ Portfolio ที่กำลังเลือกอยู่
 
-// =====================================================
+
 // 2) ดึง element จากหน้าเว็บมาเก็บไว้ใช้
-// =====================================================
+
 const listEl = document.getElementById("portfolioList");
 const countBadge = document.getElementById("countBadge");
 const emptyState = document.getElementById("emptyState");
@@ -47,10 +47,10 @@ function updateOtherTypeField() {
 typeSelect.addEventListener("change", updateOtherTypeField);
 itemForm.addEventListener("reset", () => setTimeout(updateOtherTypeField));
 
-// =====================================================
+
 // 3) บันทึก / โหลดข้อมูล (localStorage)
-//    localStorage เก็บได้เฉพาะข้อความ จึงต้องแปลงด้วย JSON
-// =====================================================
+ //แปลง JSON
+
 function saveData() {
   localStorage.setItem("portfolios", JSON.stringify(portfolios));
   localStorage.setItem("selectedId", JSON.stringify(selectedId));
@@ -66,18 +66,16 @@ function loadData() {
     selectedId = null;
   }
 
-  // ถ้า id ที่จำไว้ไม่มีอยู่แล้ว ให้เลือกอันแรกแทน
+  
   const found = portfolios.find(p => p.id === selectedId);
   if (!found) {
     selectedId = portfolios.length > 0 ? portfolios[0].id : null;
   }
 }
 
-// =====================================================
-// 4) ฟังก์ชันช่วย
-// =====================================================
 
-// กันไม่ให้ข้อความที่ผู้ใช้พิมพ์ (เช่น <script>) กลายเป็นโค้ดในหน้าเว็บ
+
+
 function escapeHtml(text) {
   return String(text)
     .replace(/&/g, "&amp;")
@@ -91,11 +89,9 @@ function getSelectedPortfolio() {
   return portfolios.find(p => p.id === selectedId);
 }
 
-// =====================================================
-// 5) แสดงผลบนหน้าเว็บ
-// =====================================================
 
-// รายชื่อ Portfolio ด้านซ้าย
+
+
 function renderList() {
 
   countBadge.textContent = portfolios.length;
@@ -115,12 +111,12 @@ function renderList() {
 
 }
 
-// รายละเอียด Portfolio ที่เลือก (ด้านขวาบน)
+
 function renderDetail() {
 
   const portfolio = getSelectedPortfolio();
 
-  // ไม่มี Portfolio -> โชว์ข้อความว่าง
+  
   if (!portfolio) {
     emptyState.hidden = false;
     detailContent.hidden = true;
@@ -140,7 +136,7 @@ function renderDetail() {
   renderItems(portfolio);
 }
 
-// รายการ Portfolio Items
+
 function renderItems(portfolio) {
   itemCount.textContent = portfolio.items.length;
 
@@ -200,15 +196,15 @@ function renderItems(portfolio) {
     .join("");
 }
 
-// วาดหน้าเว็บทั้งหมดใหม่
+
 function renderAll() {
   renderList();
   renderDetail();
 }
 
-// =====================================================
-// 6) ตรวจฟอร์ม Portfolio (ช่องว่างจะขึ้นสีแดง)
-// =====================================================
+
+// 6) ตรวจฟอร์ม Portfolio 
+
 function validateField(field) {
   const input = field.querySelector("input, textarea");
   const isEmpty = input.value.trim() === "";
@@ -220,11 +216,11 @@ portfolioFields.forEach(field => {
   input.addEventListener("input", () => validateField(field));
 });
 
-// =====================================================
-// 7) เหตุการณ์ต่าง ๆ (กดปุ่ม / ส่งฟอร์ม)
-// =====================================================
 
-// --- กดเลือก Portfolio จากรายชื่อ ---
+// 7) เหตุการณ์ต่าง ๆ (กดปุ่ม / ส่งฟอร์ม)
+
+
+
 listEl.addEventListener("click", event => {
   const button = event.target.closest(".portfolio-item");
   if (!button) return;
@@ -234,7 +230,7 @@ listEl.addEventListener("click", event => {
   renderAll();
 });
 
-// --- ส่งฟอร์มสร้าง Portfolio ใหม่ ---
+
 portfolioForm.addEventListener("submit", event => {
   event.preventDefault();
 
@@ -242,7 +238,7 @@ portfolioForm.addEventListener("submit", event => {
   if (portfolioForm.querySelector(".invalid")) return; // มีช่องว่าง -> หยุด
 
   const newPortfolio = {
-    id: Date.now(), // ใช้เวลาปัจจุบันเป็น id ไม่ซ้ำกัน
+    id: Date.now(), 
     name: document.getElementById("displayName").value.trim(),
     enjoy: document.getElementById("enjoy").value.trim(),
     tried: document.getElementById("tried").value.trim(),
@@ -259,7 +255,7 @@ portfolioForm.addEventListener("submit", event => {
   renderAll();
 });
 
-// --- ลบ Portfolio ---
+
 deleteBtn.addEventListener("click", () => {
   const portfolio = getSelectedPortfolio();
   if (!portfolio) return;
@@ -273,7 +269,7 @@ deleteBtn.addEventListener("click", () => {
   renderAll();
 });
 
-// --- ส่งฟอร์มเพิ่ม Portfolio Item ---
+
 itemForm.addEventListener("submit", event => {
   event.preventDefault();
 
@@ -283,7 +279,7 @@ itemForm.addEventListener("submit", event => {
     return;
   }
 
-  // ให้เบราว์เซอร์เช็ก required ให้
+ 
   if (!itemForm.checkValidity()) {
     itemForm.reportValidity();
     return;
@@ -296,6 +292,7 @@ itemForm.addEventListener("submit", event => {
   }
 
   // แยก Evidence ทีละบรรทัด
+
   const evidence = document.getElementById("evidence").value
     .split("\n")
     .map(line => line.trim())
@@ -308,7 +305,7 @@ itemForm.addEventListener("submit", event => {
     return;
   }
 
-  // แยก Skills ด้วยเครื่องหมายจุลภาค
+  
   const skills = document.getElementById("skills").value
     .split(",")
     .map(s => s.trim())
@@ -336,7 +333,7 @@ itemForm.addEventListener("submit", event => {
   renderAll();
 });
 
-// --- ลบ Item (ดักการคลิกที่กล่องรวม) ---
+
 itemsContainer.addEventListener("click", event => {
   if (!event.target.classList.contains("delete-item-btn")) return;
 
@@ -353,9 +350,7 @@ itemsContainer.addEventListener("click", event => {
 
 });
 
-// =====================================================
-// 8) เริ่มทำงานเมื่อเปิดหน้าเว็บ
-// =====================================================
+
 loadData();
 renderAll();
  
