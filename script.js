@@ -1,6 +1,7 @@
-
 let portfolios = [];   // เก็บ Portfolio ทั้งหมด
 let selectedId = null; // id ของ Portfolio ที่กำลังเลือกอยู่
+
+const exampleFiles = ["portfolio-example-1.json", "portfolio-example-2.json"];
 
 const listEls = [
   document.getElementById("portfolioList"),
@@ -72,55 +73,66 @@ function saveData() {
   localStorage.setItem("selectedId", JSON.stringify(selectedId));
 }
 
+// แปลงโครงสร้างไฟล์ JSON ตัวอย่าง ให้เป็นรูปแบบที่เว็บใช้
+function convertExample(example) {
+  return {
+    id: String(example.portfolioId),
+    name: example.name,
+    enjoy: example.whatIEnjoy,
+    tried: example.whatIveTried,
+    curious: example.whatImCuriousAbout,
+    items: (example.items || []).map(item => ({
+      ...item,
+      whatIDid: item.reflection?.whatIDid || "",
+      whatILearned: item.reflection?.whatILearned || "",
+      challenge: item.reflection?.challenge || "",
+      nextStep: item.reflection?.nextStep || ""
+    }))
+  };
+}
+
+async function loadExamples() {
+  const results = await Promise.all(exampleFiles.map(async file => {
+    try {
+      const response = await fetch(file);
+      if (!response.ok) throw new Error(`โหลด ${file} ไม่สำเร็จ`);
+      return convertExample(await response.json());
+    } catch (error) {
+      console.error(error);
+      return null; // ไฟล์ไหนพัง ข้ามไป ไม่ล้มทั้งหมด
+    }
+  }));
+  return results.filter(Boolean);
+}
+
 async function loadData() {
-  const savedPortfolios = localStorage.getItem("portfolios");
-
+  // 1) โหลดข้อมูลที่บันทึกไว้ใน localStorage
   try {
-    if (savedPortfolios !== null) {
-      portfolios = JSON.parse(savedPortfolios) || [];
-      selectedId = JSON.parse(localStorage.getItem("selectedId"));
-    }
-
-    const hasLegacyExample = portfolios.length === 1 && portfolios[0].name === "Portfolio ตัวอย่าง";
-    if (savedPortfolios === null || hasLegacyExample) {
-      const exampleFiles = ["portfolio-example.json", "portfolio-example-2.json"];
-      const examples = await Promise.all(exampleFiles.map(async file => {
-        const response = await fetch(file);
-        if (!response.ok) throw new Error(`โหลด ${file} ไม่สำเร็จ`);
-        return response.json();
-      }));
-
-      portfolios = examples.map(example => ({
-        id: example.portfolioId,
-        name: example.name,
-        enjoy: example.whatIEnjoy,
-        tried: example.whatIveTried,
-        curious: example.whatImCuriousAbout,
-        items: (example.items || []).map(item => ({
-          ...item,
-          whatIDid: item.reflection?.whatIDid || "",
-          whatILearned: item.reflection?.whatILearned || "",
-          challenge: item.reflection?.challenge || "",
-          nextStep: item.reflection?.nextStep || ""
-        }))
-      }));
-      selectedId = portfolios.length > 0 ? portfolios[0].id : null;
-      saveData();
-    }
+    portfolios = JSON.parse(localStorage.getItem("portfolios")) || [];
+    selectedId = JSON.parse(localStorage.getItem("selectedId"));
   } catch (error) {
-    console.error("ไม่สามารถโหลดข้อมูล Portfolio ได้:", error);
+    console.error("อ่านข้อมูลใน localStorage ไม่ได้:", error);
     portfolios = [];
     selectedId = null;
   }
 
-  const found = portfolios.find(p => p.id === selectedId);
-  if (!found) {
+  // ทำให้ id เป็น string ทั้งหมด (ข้อมูลเก่าที่ใช้ Date.now() เป็นตัวเลข)
+  portfolios.forEach(p => { p.id = String(p.id); });
+  if (selectedId !== null) selectedId = String(selectedId);
+
+  // 2) โหลดตัวอย่างจากไฟล์ แล้วเติมเฉพาะอันที่ยังไม่มี
+  const examples = await loadExamples();
+  const existingIds = new Set(portfolios.map(p => p.id));
+  const missing = examples.filter(e => !existingIds.has(e.id));
+  portfolios = [...missing, ...portfolios]; // ตัวอย่างอยู่บนสุด
+
+  // 3) ตรวจว่า selectedId ยังมีอยู่
+  if (!portfolios.some(p => p.id === selectedId)) {
     selectedId = portfolios.length > 0 ? portfolios[0].id : null;
   }
+
+  saveData();
 }
-
-
-
 
 
 function escapeHtml(text) {
@@ -135,8 +147,6 @@ function escapeHtml(text) {
 function getSelectedPortfolio() {
   return portfolios.find(p => p.id === selectedId);
 }
-
-
 
 
 function renderList() {
@@ -156,7 +166,7 @@ function renderList() {
       <li>
         <button type="button"
                 class="portfolio-item ${p.id === selectedId ? "active" : ""}"
-                data-id="${p.id}">
+                data-id="${escapeHtml(p.id)}">
           <span class="name">${escapeHtml(p.name)}</span>
           <span class="count">${p.items.length} รายการ</span>
         </button>
@@ -175,7 +185,7 @@ function renderDetail() {
 
   const portfolio = getSelectedPortfolio();
 
-  
+
   if (!portfolio) {
     emptyState.hidden = false;
     detailContent.hidden = true;
@@ -206,11 +216,11 @@ function renderItems(portfolio) {
 
   itemsContainer.innerHTML = portfolio.items
     .map((item, index) => {
-      const skillsHtml = item.skills
+      const skillsHtml = (item.skills || [])
         .map(skill => `<span>${escapeHtml(skill)}</span>`)
         .join("");
 
-      const evidenceHtml = item.evidence
+      const evidenceHtml = (item.evidence || [])
         .map(url => `
           <li>
             <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
@@ -292,7 +302,6 @@ pageTabs.forEach(tab => {
 });
 
 
-
 function handlePortfolioSelection(event) {
   const button = event.target.closest(".portfolio-item");
   if (!button) return;
@@ -315,7 +324,7 @@ portfolioForm.addEventListener("submit", event => {
   if (portfolioForm.querySelector(".invalid")) return; // มีช่องว่าง -> หยุด
 
   const newPortfolio = {
-    id: Date.now(), 
+    id: String(Date.now()),
     name: document.getElementById("displayName").value.trim(),
     enjoy: document.getElementById("enjoy").value.trim(),
     tried: document.getElementById("tried").value.trim(),
@@ -356,7 +365,7 @@ itemForm.addEventListener("submit", event => {
     return;
   }
 
- 
+
   if (!itemForm.checkValidity()) {
     itemForm.reportValidity();
     return;
@@ -382,7 +391,7 @@ itemForm.addEventListener("submit", event => {
     return;
   }
 
-  
+
   const skills = document.getElementById("skills").value
     .split(",")
     .map(s => s.trim())
@@ -404,7 +413,7 @@ itemForm.addEventListener("submit", event => {
   };
 
   portfolio.items.push(newItem);
-  
+
   saveData();
   itemForm.reset();
   renderAll();
@@ -428,4 +437,3 @@ itemsContainer.addEventListener("click", event => {
 });
 
 loadData().then(renderAll);
- 
