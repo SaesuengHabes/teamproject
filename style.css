@@ -519,11 +519,7 @@ body {
   background: #fef2f2;
 }
 
-@media (max-width: 700px) {
-  #itemsContainer {
-    grid-template-columns: 1fr;
-  }
-}
+
 
 @media (max-width: 900px) {
   .layout {
