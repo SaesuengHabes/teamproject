@@ -1,0 +1,59 @@
+{
+  "portfolioId": "portfolio-1",
+  "name": "Flick",
+  "whatIEnjoy": "Vibe coding ",
+  "whatIveTried": "HTML5, CSS3.",
+  "whatImCuriousAbout": "upgrade all of AI",
+  "items": [
+    {
+      "id": "item-201",
+      "title": "CODEX Hacking competetion",
+      "type": "staff",
+      "date": "2022-05-09",
+      "role": "line staff",
+      "description": "make the people get in the line.",
+      "skills": [
+        "html",
+        "css",
+        "tailwind",
+        "JavaScript"
+        
+      ],
+      "reflection": {
+        "whatIDid": "take the people who get out the line left",
+        "whatILearned": "how to fight with angry person",
+        "challenge": "that all new for me",
+        "nextStep": "try to be challenger"
+      },
+      "evidence": [
+        "https://github.com/example/power-up-portfolio",
+        "https://example.com/power-up-demo"
+      ]
+    },
+    {
+      "id": "item-202",
+      "title": "TU Hacking competition",
+      "type": "Competition",
+      "date": "2026-09-20",
+      "role": "project manager",
+      "description": "make everyone in my team happy",
+      "skills": [
+        "Figma",
+        "UX Research",
+        "Wireframing",
+        "Team Collaboration",
+        "Pitching"
+      ],
+      "reflection": {
+        "whatIDid": "take all people in my team happy",
+        "whatILearned": "how hard to make people happy",
+        "challenge": "i love everyone",
+        "nextStep": "Bigger competition like a country scale"
+      },
+      "evidence": [
+        "https://figma.com/file/example-campus-green-cup",
+        "https://example.com/hackathon-pitch-deck"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "portfolioId": "portfolio-2",
+  "name": "Sirasate Silanun",
+  "whatIEnjoy": "Coding",
+  "whatIveTried": "Automation",
+  "whatImCuriousAbout": "Sheet appscript",
+  "items": [
+    {
+      "id": "item-101",
+      "title": "Sheet appscript",
+      "type": "Personal Project",
+      "date": "1999-01-01",
+      "role": "Solo Developer",
+      "description": "build simple automation google sheet",
+      "skills": [
+        "c++",
+        "JavaScript",
+        "c",
+        "data science"
+      ],
+      "reflection": {
+        "whatIDid": "javascipt",
+        "whatILearned": "automation",
+        "challenge": "connect everything together",
+        "nextStep": "API from another site"
+      },
+      "evidence": [
+        "https://github.com/example/study-deadline-tracker"
+      ]
+    },
+    {
+      "id": "item-102",
+      "title": "dance in the party",
+      "type": "Club Activity",
+      "date": "2022-06-07",
+      "role": "Co-ceo",
+      "description": "entertain all people at the party",
+      "skills": [
+        "dance",
+        "social",
+        "Public Speaking",
+        "drinking"
+        
+      ],
+      "reflection": {
+        "whatIDid": "prepare drink for the party",
+        "whatILearned": "what hard it be ",
+        "challenge": "try to talk with new people",
+        "nextStep": "make a next party"
+      },
+      "evidence": [
+        "https://github.com/example/cs-club-git-workshop",
+        "https://example.com/git-workshop-slides"
+      ]
+    }
+  ]
+}
