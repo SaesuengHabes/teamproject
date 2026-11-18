@@ -1,14 +1,14 @@
-// =====================================================
-// 1) ตัวแปรเก็บข้อมูล
-// =====================================================
 let portfolios = [];   // เก็บ Portfolio ทั้งหมด
 let selectedId = null; // id ของ Portfolio ที่กำลังเลือกอยู่
 
-// =====================================================
-// 2) ดึง element จากหน้าเว็บมาเก็บไว้ใช้
-// =====================================================
-const listEl = document.getElementById("portfolioList");
+const exampleFiles = ["portfolio-example-1.json", "portfolio-example-2.json"];
+
+const listEls = [
+  document.getElementById("portfolioList"),
+  document.getElementById("createPortfolioList")
+];
 const countBadge = document.getElementById("countBadge");
+const portfolioCountBadge = document.getElementById("portfolioCountBadge");
 const emptyState = document.getElementById("emptyState");
 const detailContent = document.getElementById("detailContent");
 
@@ -20,42 +20,122 @@ const detailCurious = document.getElementById("detailCurious");
 const itemsContainer = document.getElementById("itemsContainer");
 const itemCount = document.getElementById("itemCount");
 const deleteBtn = document.getElementById("deleteBtn");
+const pageTabs = document.querySelectorAll(".page-tab");
+const themeToggle = document.getElementById("themeToggle");
+const createPage = document.getElementById("createPage");
+const createContent = document.querySelector(".create-content");
+const portfolioPage = document.getElementById("portfolioPage");
+const portfolioContent = document.querySelector(".portfolio-content");
 
 const portfolioForm = document.getElementById("portfolioForm");
 const portfolioFields = portfolioForm.querySelectorAll(".field");
 const itemForm = document.getElementById("item-form");
+const typeSelect = document.getElementById("type");
+const otherTypeField = document.getElementById("otherTypeField");
+const otherTypeInput = document.getElementById("otherType");
+const dateInput = document.getElementById("date");
 
-// =====================================================
-// 3) บันทึก / โหลดข้อมูล (localStorage)
-//    localStorage เก็บได้เฉพาะข้อความ จึงต้องแปลงด้วย JSON
-// =====================================================
+function setTheme(theme) {
+  const isDark = theme === "dark";
+  document.body.dataset.theme = isDark ? "dark" : "light";
+  themeToggle.setAttribute("aria-checked", String(isDark));
+  themeToggle.title = isDark ? "เปิดโหมดสว่าง" : "เปิดโหมดมืด";
+}
+
+setTheme(localStorage.getItem("portfolioTheme") === "dark" ? "dark" : "light");
+themeToggle.addEventListener("click", () => {
+  const nextTheme = document.body.dataset.theme === "dark" ? "light" : "dark";
+  localStorage.setItem("portfolioTheme", nextTheme);
+  setTheme(nextTheme);
+});
+
+function getTodayDate() {
+    const now = new Date();
+    const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+    return localDate.toISOString().slice(0, 10);
+}
+
+
+dateInput.max = getTodayDate();
+
+function updateOtherTypeField() {
+  const isOther = typeSelect.value === "Other";
+  otherTypeField.hidden = !isOther;
+  otherTypeInput.required = isOther
+  if (!isOther) otherTypeInput.value = "";
+}
+
+typeSelect.addEventListener("change", updateOtherTypeField);
+itemForm.addEventListener("reset", () => setTimeout(updateOtherTypeField));
+
+
 function saveData() {
   localStorage.setItem("portfolios", JSON.stringify(portfolios));
   localStorage.setItem("selectedId", JSON.stringify(selectedId));
 }
 
-function loadData() {
+// แปลงโครงสร้างไฟล์ JSON ตัวอย่าง ให้เป็นรูปแบบที่เว็บใช้
+function convertExample(example) {
+  return {
+    id: String(example.portfolioId),
+    name: example.name,
+    enjoy: example.whatIEnjoy,
+    tried: example.whatIveTried,
+    curious: example.whatImCuriousAbout,
+    items: (example.items || []).map(item => ({
+      ...item,
+      whatIDid: item.reflection?.whatIDid || "",
+      whatILearned: item.reflection?.whatILearned || "",
+      challenge: item.reflection?.challenge || "",
+      nextStep: item.reflection?.nextStep || ""
+    }))
+  };
+}
+
+async function loadExamples() {
+  const results = await Promise.all(exampleFiles.map(async file => {
+    try {
+      const response = await fetch(file);
+      if (!response.ok) throw new Error(`โหลด ${file} ไม่สำเร็จ`);
+      return convertExample(await response.json());
+    } catch (error) {
+      console.error(error);
+      return null; // ไฟล์ไหนพัง ข้ามไป ไม่ล้มทั้งหมด
+    }
+  }));
+  return results.filter(Boolean);
+}
+
+async function loadData() {
+  // 1) โหลดข้อมูลที่บันทึกไว้ใน localStorage
   try {
     portfolios = JSON.parse(localStorage.getItem("portfolios")) || [];
     selectedId = JSON.parse(localStorage.getItem("selectedId"));
   } catch (error) {
-    // ถ้าข้อมูลเสีย ให้เริ่มใหม่
+    console.error("อ่านข้อมูลใน localStorage ไม่ได้:", error);
     portfolios = [];
     selectedId = null;
   }
 
-  // ถ้า id ที่จำไว้ไม่มีอยู่แล้ว ให้เลือกอันแรกแทน
-  const found = portfolios.find(p => p.id === selectedId);
-  if (!found) {
+  // ทำให้ id เป็น string ทั้งหมด (ข้อมูลเก่าที่ใช้ Date.now() เป็นตัวเลข)
+  portfolios.forEach(p => { p.id = String(p.id); });
+  if (selectedId !== null) selectedId = String(selectedId);
+
+  // 2) โหลดตัวอย่างจากไฟล์ แล้วเติมเฉพาะอันที่ยังไม่มี
+  const examples = await loadExamples();
+  const existingIds = new Set(portfolios.map(p => p.id));
+  const missing = examples.filter(e => !existingIds.has(e.id));
+  portfolios = [...missing, ...portfolios]; // ตัวอย่างอยู่บนสุด
+
+  // 3) ตรวจว่า selectedId ยังมีอยู่
+  if (!portfolios.some(p => p.id === selectedId)) {
     selectedId = portfolios.length > 0 ? portfolios[0].id : null;
   }
+
+  saveData();
 }
 
-// =====================================================
-// 4) ฟังก์ชันช่วย
-// =====================================================
 
-// กันไม่ให้ข้อความที่ผู้ใช้พิมพ์ (เช่น <script>) กลายเป็นโค้ดในหน้าเว็บ
 function escapeHtml(text) {
   return String(text)
     .replace(/&/g, "&amp;")
@@ -69,21 +149,25 @@ function getSelectedPortfolio() {
   return portfolios.find(p => p.id === selectedId);
 }
 
-// =====================================================
-// 5) แสดงผลบนหน้าเว็บ
-// =====================================================
 
-// รายชื่อ Portfolio ด้านซ้าย
 function renderList() {
 
   countBadge.textContent = portfolios.length;
+  portfolioCountBadge.textContent = portfolios.length;
 
-  listEl.innerHTML = portfolios
+  if (portfolios.length === 0) {
+    listEls.forEach(list => {
+      list.innerHTML = '<li class="list-empty">ยังไม่มี Portfolio ที่บันทึก</li>';
+    });
+    return;
+  }
+
+  const portfolioListMarkup = portfolios
     .map(p => `
       <li>
         <button type="button"
                 class="portfolio-item ${p.id === selectedId ? "active" : ""}"
-                data-id="${p.id}">
+                data-id="${escapeHtml(p.id)}">
           <span class="name">${escapeHtml(p.name)}</span>
           <span class="count">${p.items.length} รายการ</span>
         </button>
@@ -91,14 +175,18 @@ function renderList() {
     `)
     .join("");
 
+  listEls.forEach(list => {
+    list.innerHTML = portfolioListMarkup;
+  });
+
 }
 
-// รายละเอียด Portfolio ที่เลือก (ด้านขวาบน)
+
 function renderDetail() {
 
   const portfolio = getSelectedPortfolio();
 
-  // ไม่มี Portfolio -> โชว์ข้อความว่าง
+
   if (!portfolio) {
     emptyState.hidden = false;
     detailContent.hidden = true;
@@ -118,7 +206,7 @@ function renderDetail() {
   renderItems(portfolio);
 }
 
-// รายการ Portfolio Items
+
 function renderItems(portfolio) {
   itemCount.textContent = portfolio.items.length;
 
@@ -129,11 +217,11 @@ function renderItems(portfolio) {
 
   itemsContainer.innerHTML = portfolio.items
     .map((item, index) => {
-      const skillsHtml = item.skills
+      const skillsHtml = (item.skills || [])
         .map(skill => `<span>${escapeHtml(skill)}</span>`)
         .join("");
 
-      const evidenceHtml = item.evidence
+      const evidenceHtml = (item.evidence || [])
         .map(url => `
           <li>
             <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
@@ -147,7 +235,7 @@ function renderItems(portfolio) {
         <article class="portfolio-item-card">
           <h3 class="item-title">${escapeHtml(item.title)}</h3>
           <p class="item-meta">
-            ${escapeHtml(item.type)} · ${escapeHtml(item.date)} · ${escapeHtml(item.role)}
+            ${escapeHtml(item.type === "Other" && item.typeDetails ? `Other: ${item.typeDetails}` : item.type)} · ${escapeHtml(item.date)} · ${escapeHtml(item.role)}
           </p>
           <p class="item-description">${escapeHtml(item.description)}</p>
 
@@ -178,41 +266,58 @@ function renderItems(portfolio) {
     .join("");
 }
 
-// วาดหน้าเว็บทั้งหมดใหม่
+
 function renderAll() {
   renderList();
   renderDetail();
 }
 
-// =====================================================
-// 6) ตรวจฟอร์ม Portfolio (ช่องว่างจะขึ้นสีแดง)
-// =====================================================
+function showPage(pageId) {
+  const isCreatePage = pageId === "createPage";
+  createPage.hidden = !isCreatePage;
+  createContent.hidden = !isCreatePage;
+  portfolioPage.hidden = isCreatePage;
+  portfolioContent.hidden = isCreatePage;
+
+  pageTabs.forEach(tab => {
+    const isActive = tab.dataset.page === pageId;
+    tab.classList.toggle("active", isActive);
+    tab.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
+
 function validateField(field) {
   const input = field.querySelector("input, textarea");
   const isEmpty = input.value.trim() === "";
   field.classList.toggle("invalid", isEmpty);
 }
 
-portfolioFields.forEach(field => {
-  const input = field.querySelector("input, textarea");
-  input.addEventListener("input", () => validateField(field));
+portfolioForm.addEventListener("input", event => {
+  const field = event.target.closest(".field");
+  if (field) validateField(field);
 });
 
-// =====================================================
-// 7) เหตุการณ์ต่าง ๆ (กดปุ่ม / ส่งฟอร์ม)
-// =====================================================
+pageTabs.forEach(tab => {
+  tab.addEventListener("click", () => showPage(tab.dataset.page));
+});
 
-// --- กดเลือก Portfolio จากรายชื่อ ---
-listEl.addEventListener("click", event => {
+
+function handlePortfolioSelection(event) {
   const button = event.target.closest(".portfolio-item");
   if (!button) return;
 
-  selectedId = Number(button.dataset.id);
+  selectedId = button.dataset.id;
   saveData();
   renderAll();
+  showPage("portfolioPage");
+}
+
+listEls.forEach(list => {
+  list.addEventListener("click", handlePortfolioSelection);
 });
 
-// --- ส่งฟอร์มสร้าง Portfolio ใหม่ ---
+
 portfolioForm.addEventListener("submit", event => {
   event.preventDefault();
 
@@ -220,7 +325,7 @@ portfolioForm.addEventListener("submit", event => {
   if (portfolioForm.querySelector(".invalid")) return; // มีช่องว่าง -> หยุด
 
   const newPortfolio = {
-    id: Date.now(), // ใช้เวลาปัจจุบันเป็น id ไม่ซ้ำกัน
+    id: String(Date.now()),
     name: document.getElementById("displayName").value.trim(),
     enjoy: document.getElementById("enjoy").value.trim(),
     tried: document.getElementById("tried").value.trim(),
@@ -237,7 +342,7 @@ portfolioForm.addEventListener("submit", event => {
   renderAll();
 });
 
-// --- ลบ Portfolio ---
+
 deleteBtn.addEventListener("click", () => {
   const portfolio = getSelectedPortfolio();
   if (!portfolio) return;
@@ -251,7 +356,7 @@ deleteBtn.addEventListener("click", () => {
   renderAll();
 });
 
-// --- ส่งฟอร์มเพิ่ม Portfolio Item ---
+
 itemForm.addEventListener("submit", event => {
   event.preventDefault();
 
@@ -261,13 +366,20 @@ itemForm.addEventListener("submit", event => {
     return;
   }
 
-  // ให้เบราว์เซอร์เช็ก required ให้
+
   if (!itemForm.checkValidity()) {
     itemForm.reportValidity();
     return;
   }
 
+  if (dateInput.value > getTodayDate()) {
+    alert("เลือกวันที่ไม่ถูกต้อง: วันที่ทำงานต้องไม่เป็นวันในอนาคต");
+    dateInput.focus();
+    return;
+  }
+
   // แยก Evidence ทีละบรรทัด
+
   const evidence = document.getElementById("evidence").value
     .split("\n")
     .map(line => line.trim())
@@ -280,7 +392,7 @@ itemForm.addEventListener("submit", event => {
     return;
   }
 
-  // แยก Skills ด้วยเครื่องหมายจุลภาค
+
   const skills = document.getElementById("skills").value
     .split(",")
     .map(s => s.trim())
@@ -289,6 +401,7 @@ itemForm.addEventListener("submit", event => {
   const newItem = {
     title: document.getElementById("title").value.trim(),
     type: document.getElementById("type").value,
+    typeDetails: typeSelect.value === "Other" ? otherTypeInput.value.trim() : "",
     date: document.getElementById("date").value,
     role: document.getElementById("role").value.trim(),
     description: document.getElementById("description").value.trim(),
@@ -301,13 +414,13 @@ itemForm.addEventListener("submit", event => {
   };
 
   portfolio.items.push(newItem);
-  
+
   saveData();
   itemForm.reset();
   renderAll();
 });
 
-// --- ลบ Item (ดักการคลิกที่กล่องรวม) ---
+
 itemsContainer.addEventListener("click", event => {
   if (!event.target.classList.contains("delete-item-btn")) return;
 
@@ -324,8 +437,4 @@ itemsContainer.addEventListener("click", event => {
 
 });
 
-// =====================================================
-// 8) เริ่มทำงานเมื่อเปิดหน้าเว็บ
-// =====================================================
-loadData();
-renderAll();
+loadData().then(renderAll);
