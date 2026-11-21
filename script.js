@@ -7,7 +7,7 @@ const exampleFiles = ["portfolio-example-1.json", "portfolio-example-2.json"];
 const listEls = [
   document.getElementById("portfolioList"),
   document.getElementById("createPortfolioList")
-];
+].filter(Boolean);
 const countBadge = document.getElementById("countBadge");
 const portfolioCountBadge = document.getElementById("portfolioCountBadge");
 const emptyState = document.getElementById("emptyState");
@@ -196,8 +196,8 @@ function getSelectedPortfolio() {
 
 function renderList() {
 
-  countBadge.textContent = portfolios.length;
-  portfolioCountBadge.textContent = portfolios.length;
+    if (countBadge) countBadge.textContent = portfolios.length;
+    portfolioCountBadge.textContent = portfolios.length;
 
   if (portfolios.length === 0) {
     listEls.forEach(list => {
@@ -614,3 +614,108 @@ loadData().then(() => {
 
 });
 // loadData().then(renderAll);
+
+// ===== Import Portfolio =====
+
+const importFile = document.getElementById("importFile");
+const importJson = document.getElementById("importJson");
+const importError = document.getElementById("importError");
+const validateImportBtn = document.getElementById("validateImportBtn");
+
+let importedItem = null; // เก็บ Item ที่ตรวจผ่านแล้ว
+
+// เลือกไฟล์ .json แล้วเอาข้อความไปใส่ในช่อง Textarea
+importFile.addEventListener("change", () => {
+  const file = importFile.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    importJson.value = reader.result;
+  };
+  reader.readAsText(file);
+});
+
+// กดปุ่มตรวจสอบ JSON
+validateImportBtn.addEventListener("click", () => {
+  importError.hidden = true;
+  importedItem = null;
+
+  // 1) ช่องว่าง
+  if (importJson.value.trim() === "") {
+    importError.textContent = "โปรดเลือกไฟล์หรือวาง JSON ก่อน";
+    importError.hidden = false;
+    return;
+  }
+
+  // 2) รูปแบบ JSON
+  let data;
+  try {
+    data = JSON.parse(importJson.value);
+  } catch (error) {
+    importError.textContent = "รูปแบบ JSON ไม่ถูกต้อง";
+    importError.hidden = false;
+    return;
+  }
+
+  // 3) ถ้าเป็นไฟล์ทั้ง Portfolio ให้ดึง Item ออกมา
+  if (data !== null && Array.isArray(data.items)) {
+    if (data.items.length !== 1) {
+      importError.textContent = "ไฟล์นี้มี " + data.items.length + " Item โปรดใช้ไฟล์ที่มี Item เดียว";
+      importError.hidden = false;
+      return;
+    }
+    data = data.items[0];
+  }
+
+  // ต้องเป็น Item 1 รายการ ไม่ใช่รายการหลายตัว
+  if (data === null || Array.isArray(data)) {
+    importError.textContent = "JSON ต้องเป็น Portfolio Item 1 รายการ";
+    importError.hidden = false;
+    return;
+  }
+
+  // 4) เช็กว่ามีข้อมูลครบไหม
+  const fields = ["title", "type", "date", "role", "description", "skills", "reflection", "evidence"];
+  const missing = [];
+  fields.forEach(field => {
+    if (!data[field]) missing.push(field);
+  });
+
+  if (missing.length > 0) {
+    importError.textContent = "ข้อมูลไม่ครบ: " + missing.join(", ");
+    importError.hidden = false;
+    return;
+  }
+
+  // 5) reflection ต้องมีครบ 4 ช่อง
+  const r = data.reflection;
+  if (!r.whatIDid || !r.whatILearned || !r.challenge || !r.nextStep) {
+    importError.textContent = "reflection ต้องมี whatIDid, whatILearned, challenge, nextStep";
+    importError.hidden = false;
+    return;
+  }
+
+  // 6) skills และ evidence ต้องเป็นรายการ อย่างน้อย 1 อย่าง
+  if (!Array.isArray(data.skills) || data.skills.length === 0) {
+    importError.textContent = "skills ต้องมีอย่างน้อย 1 รายการ";
+    importError.hidden = false;
+    return;
+  }
+  if (!Array.isArray(data.evidence) || data.evidence.length === 0) {
+    importError.textContent = "evidence ต้องมีอย่างน้อย 1 ลิงก์";
+    importError.hidden = false;
+    return;
+  }
+
+  // 7) evidence ต้องขึ้นต้นด้วย http:// หรือ https://
+  const linksOk = data.evidence.every(url => /^https?:\/\/.+/i.test(url));
+  if (!linksOk) {
+    importError.textContent = "evidence ต้องขึ้นต้นด้วย http:// หรือ https://";
+    importError.hidden = false;
+    return;
+  }
+
+  importedItem = data;
+  alert("JSON ถูกต้อง พร้อม Import");
+});
