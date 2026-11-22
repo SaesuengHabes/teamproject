@@ -44,10 +44,6 @@ foreach (['whatIEnjoy', 'whatIveTried', 'whatImCuriousAbout'] as $field) {
     }
 }
 
-// $portfolios = readPortfolios();   // 1. อ่าน
-// $portfolios[] = $portfolio;       // 2. เพิ่ม 1 คน
-// writePortfolios($portfolios);     // 3. เขียน
-// sendJson($portfolio, 201);
 $portfolios = readPortfolios(); // 1. อ่านข้อมูล Portfolio ทั้งหมด
 
 // 2. เตรียมชื่อ Portfolio ใหม่

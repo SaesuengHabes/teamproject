@@ -85,48 +85,57 @@ $('mk').onclick=()=>{
 
 $('dl').onclick=()=>{
  const m=$('dlMsg');
- try{
-  if(!currentUser)throw new Error('no name');
-  
-  // สร้างข้อมูลตามโครงสร้าง portfolio-example-2.json โดยล็อคค่าตามที่กำหนด
-  const portfolioData={
-   portfolioId:'portfolio-2',
-   name:currentUser,
-   whatIEnjoy:'Coding',
-   whatIveTried:'Automation',
-   whatImCuriousAbout:'Sheet appscript',
-   items:[
-    {
-     id:'item-001',
-     title:'blackjack',
-     type:'Challenge',
-     date:currentDateStr,
-     role:'User',
-     description:'Play Blackjack activity',
-     skills:[
-      'Thinking and planning'
-     ],
-     reflection:{
-      whatIDid:'play blackjack',
-      whatILearned:'Thinking and planning',
-      challenge:'Win the game',
-      nextStep:'Win as much as possible.'
-     },
-     evidence:[
-      'https://anuntacahi-fangtun.github.io/Blackjack/'
-     ]
-    }
-   ]
-  };
 
-  const blob=new Blob([JSON.stringify(portfolioData,null,2)],{type:'application/json'});
+ try{
+  if(!currentUser) throw new Error('no name');
+
+  // สร้างเฉพาะ Portfolio Items
+  const portfolioItems=[
+   {
+    id:'item-001',
+    title:'blackjack',
+    type:'Challenge',
+    date:currentDateStr,
+    role:'User',
+    description:'Play Blackjack activity',
+    skills:[
+     'Thinking and planning'
+    ],
+    reflection:{
+     whatIDid:'play blackjack',
+     whatILearned:'Thinking and planning',
+     challenge:'Win the game',
+     nextStep:'Win as much as possible.'
+    },
+    evidence:[
+     'https://anuntacahi-fangtun.github.io/Blackjack/'
+    ]
+   }
+  ];
+
+  // แปลงข้อมูลเป็น JSON
+  const blob=new Blob(
+   [JSON.stringify(portfolioItems,null,2)],
+   {type:'application/json'}
+  );
+
+  // สร้างลิงก์ดาวน์โหลด
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
+
   a.href=url;
-  a.download='portfolio-blackjack-'+currentUser.replace(/[\\/:*?"<>|\s]+/g,'_')+'.json';
-  document.body.appendChild(a);a.click();a.remove();
+  a.download='portfolio-items-blackjack-'+
+   currentUser.replace(/[\\/:*?"<>|\s]+/g,'_')+
+   '.json';
+
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
   setTimeout(()=>URL.revokeObjectURL(url),1000);
-  m.textContent='ดาวน์โหลดไฟล์ Portfolio JSON สำเร็จเรียบร้อย!';
+
+  m.textContent='ดาวน์โหลด Portfolio Items JSON สำเร็จเรียบร้อย!';
+
  }catch(e){
   m.textContent='ไม่สามารถสร้างไฟล์ได้ กรุณาลองใหม่อีกครั้ง';
  }
