@@ -44,7 +44,37 @@ foreach (['whatIEnjoy', 'whatIveTried', 'whatImCuriousAbout'] as $field) {
     }
 }
 
-$portfolios = readPortfolios();   // 1. อ่าน
-$portfolios[] = $portfolio;       // 2. เพิ่ม 1 คน
-writePortfolios($portfolios);     // 3. เขียน
+// $portfolios = readPortfolios();   // 1. อ่าน
+// $portfolios[] = $portfolio;       // 2. เพิ่ม 1 คน
+// writePortfolios($portfolios);     // 3. เขียน
+// sendJson($portfolio, 201);
+$portfolios = readPortfolios(); // 1. อ่านข้อมูล Portfolio ทั้งหมด
+
+// 2. เตรียมชื่อ Portfolio ใหม่
+$newName = function_exists('mb_strtolower')
+    ? mb_strtolower(trim($portfolio['displayName']), 'UTF-8')
+    : strtolower(trim($portfolio['displayName']));
+
+// 3. ตรวจสอบชื่อซ้ำกับ Portfolio ที่มีอยู่
+foreach ($portfolios as $existingPortfolio) {
+
+    $existingName = function_exists('mb_strtolower')
+        ? mb_strtolower(trim($existingPortfolio['displayName'] ?? ''), 'UTF-8')
+        : strtolower(trim($existingPortfolio['displayName'] ?? ''));
+
+    // พบชื่อซ้ำ ไม่อนุญาตให้สร้าง
+    if ($newName === $existingName) {
+        sendJson([
+            'error' => 'Portfolio นี้มีอยู่แล้ว กรุณาใช้ชื่ออื่น'
+        ], 409);
+    }
+}
+
+// 4. เพิ่ม Portfolio เมื่อไม่พบข้อมูลซ้ำ
+$portfolios[] = $portfolio;
+
+// 5. บันทึกข้อมูล
+writePortfolios($portfolios);
+
+// 6. ส่งข้อมูลกลับไปยังหน้าเว็บไซต์
 sendJson($portfolio, 201);
