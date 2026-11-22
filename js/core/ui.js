@@ -29,23 +29,46 @@ const UI = (() => {
 
   /* ---------- คลิปบอร์ด ---------- */
   /** คัดลอกข้อความ — ใช้ Clipboard API ถ้ามี (ต้องเป็น HTTPS) ไม่งั้นใช้วิธีเก่า (ใช้ได้บน HTTP) */
+
   async function copyText(text) {
+    const content = String(text ?? "");
+
+    // วิธีที่ 1: ใช้ Clipboard API
     if (navigator.clipboard && window.isSecureContext) {
       try {
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(content);
         return true;
-      } catch { /* ใช้วิธีสำรองด้านล่าง */ }
+      } catch (error) {
+        console.warn("Clipboard API failed:", error);
+      }
     }
+
+    // วิธีที่ 2: Fallback ด้วย textarea
     const area = document.createElement("textarea");
-    area.value = text;
+    area.value = content;
     area.setAttribute("readonly", "");
-    area.style.cssText = "position:fixed;top:-1000px;opacity:0";
+
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+    area.style.top = "0";
+
     document.body.appendChild(area);
+
+    area.focus();
     area.select();
-    let ok = false;
-    try { ok = document.execCommand("copy"); } catch { ok = false; }
+    area.setSelectionRange(0, area.value.length);
+
+    let success = false;
+
+    try {
+      success = document.execCommand("copy");
+    } catch (error) {
+      console.error("Fallback copy failed:", error);
+    }
+
     area.remove();
-    return ok;
+
+    return success;
   }
 
   /* ---------- Toast ---------- */

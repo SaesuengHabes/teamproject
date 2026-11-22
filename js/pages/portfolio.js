@@ -170,9 +170,49 @@
     });
   });
 
-  $("jsonCopyBtn").addEventListener("click", async () => {
-    const ok = await UI.copyText($("jsonModalText").value);
-    UI.toast(ok ? "คัดลอก JSON แล้ว — ส่งให้เพื่อนวางในช่อง Import ได้เลย" : "คัดลอกไม่สำเร็จ ลองกด Download แทน", ok ? "success" : "error");
+    $("jsonCopyBtn").addEventListener("click", async () => {
+    const button = $("jsonCopyBtn");
+    const originalText = button.textContent;
+
+    // ป้องกันการกดซ้ำระหว่างกำลังคัดลอก
+    button.disabled = true;
+
+    try {
+      const ok = await UI.copyText($("jsonModalText").value);
+
+      if (ok) {
+        button.textContent = "Copied!";
+
+        UI.toast(
+          "คัดลอก JSON สำเร็จแล้ว",
+          "success"
+        );
+
+        // คืนข้อความปุ่มหลัง 2 วินาที
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.disabled = false;
+        }, 2000);
+
+      } else {
+        UI.toast(
+          "คัดลอกไม่สำเร็จ กรุณาใช้ปุ่ม Download แทน",
+          "error"
+        );
+
+        button.disabled = false;
+      }
+
+    } catch (error) {
+      console.error("Copy JSON error:", error);
+
+      UI.toast(
+        "เกิดข้อผิดพลาดในการคัดลอก JSON",
+        "error"
+      );
+
+      button.disabled = false;
+    }
   });
 
   $("jsonDownloadBtn").addEventListener("click", () => {
