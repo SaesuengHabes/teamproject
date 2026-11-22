@@ -1,0 +1,7 @@
+# PHP Local Development Data
+
+# Ignore local database and user data
+/local-data/
+
+# Ignore PHP temporary files
+*.tmp
