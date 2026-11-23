@@ -162,17 +162,11 @@
   $("exportBtn").addEventListener("click", () => {
   const portfolio = PortfolioData.getSelected();
   if (!portfolio) return;
-
-  // ดึงเฉพาะ Portfolio Items
-  const portfolioItems = Array.isArray(portfolio.items)
-    ? portfolio.items
-    : [];
-
   openJsonModal({
-    title: "Export Portfolio Items",
-    hint: "ส่งออกเฉพาะผลงานและกิจกรรมของคุณในรูปแบบ JSON",
-    data: portfolioItems,
-    filename: "portfolio-items.json"
+    title: "Export My Portfolio",
+    hint: "ไฟล์ Portfolio ทั้งหมดของคุณ (my-portfolio.json) สำหรับส่งงาน",
+    data: portfolio,
+    filename: "my-portfolio.json"
     });
   });
 
